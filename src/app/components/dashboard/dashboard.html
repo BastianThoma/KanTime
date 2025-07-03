@@ -4,10 +4,12 @@
   <label for="task">Task wählen:</label>
   <input id="task" placeholder="TASK-TEST" />
 
-  <button>▶ Start</button>
-  <button>⏸ Pause</button>
-  <button>⏵ Weiter</button>
-  <button>⏹ Stop</button>
+  <button (click)="start()" [disabled]="isWorking()">▶ Start</button>
+  <button (click)="pause()" [disabled]="!isWorking() || isPaused()">
+    ⏸ Pause
+  </button>
+  <button (click)="resume()" [disabled]="!isPaused()">⏵ Weiter</button>
+  <button (click)="stop()" [disabled]="!isWorking()">⏹ Stop</button>
 </div>
 
-<p>🧮 Arbeitszeit:</p>
+<p>🧮 Arbeitszeit: <strong>{{ format(totalWorked()) }}</strong></p>
