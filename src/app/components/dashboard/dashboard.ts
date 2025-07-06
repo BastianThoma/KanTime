@@ -7,10 +7,11 @@ import {
   selectTotalWorked,
 } from '../../state/time/time.selectors';
 import * as TimeActions from '../../state/time/time.actions';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })

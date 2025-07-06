@@ -1,0 +1,26 @@
+<div class="p-4 max-w-md mx-auto">
+  <h2 class="text-xl font-bold mb-4">Neue Aufgabe</h2>
+  <div class="flex gap-2 mb-6">
+    <input
+      [(ngModel)]="newTitle"
+      type="text"
+      placeholder="Aufgabe eingeben"
+      class="flex-1 border rounded px-2 py-1"
+    />
+    <button (click)="addTask()" class="bg-blue-600 text-white px-3 py-1 rounded">
+      Hinzufügen
+    </button>
+  </div>
+
+  <h3 class="text-lg font-semibold mb-2">To Do</h3>
+  <ul class="space-y-2">
+    <li
+      *ngFor="let task of todoTasks$ | async"
+      class="border rounded p-3 bg-white shadow-sm"
+    >
+      <strong>{{ task.title }}</strong><br />
+      <small>ID: {{ task.id }}</small>
+    </li>
+  </ul>
+</div>
+
