@@ -7,6 +7,7 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { timeReducer } from './state/time/time.reducer';
+import { TimeEffects } from './state/time/time.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,7 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideStore({ time: timeReducer }),
-    provideEffects([]),
+    provideEffects(TimeEffects),
     provideStoreDevtools({ maxAge: 25 }),
   ]
 };
