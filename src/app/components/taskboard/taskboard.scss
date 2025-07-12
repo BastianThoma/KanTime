@@ -1,0 +1,146 @@
+
+.kanban-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 1rem;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+
+  .kanban-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .kanban-input-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+
+    .kanban-input {
+      flex: 1;
+      padding: 0.5rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .kanban-add-btn {
+      background: #1976d2;
+      color: #fff;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #1565c0;
+      }
+    }
+  }
+
+  .kanban-board {
+    display: flex;
+    gap: 2rem;
+    justify-content: space-between;
+
+    .kanban-column {
+      flex: 1;
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      padding: 1rem;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+
+      .kanban-column-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .kanban-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        flex: 1;
+
+        &.drag-over {
+          background: #e3f2fd;
+          border-radius: 0.75rem;
+        }
+
+        .kanban-card {
+          margin-bottom: 1.5rem;
+          cursor: grab;
+          user-select: none;
+          transition: box-shadow 0.2s, border 0.2s;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          &[draggable="true"] {
+            opacity: 1;
+          }
+
+          &.dragging {
+            opacity: 0.5;
+            box-shadow: 0 4px 16px rgba(25, 118, 210, 0.15);
+            border: 2px dashed #1976d2;
+          }
+
+          .kanban-card-content {
+            position: relative;
+            background: #f4f6fb;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+            padding: 1rem 1.5rem 1rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            border: 1px solid #e0e0e0;
+
+            .kanban-card-title {
+              font-size: 1.1rem;
+              font-weight: 600;
+              color: #1976d2;
+            }
+
+            .kanban-card-id,
+            .kanban-card-status,
+            .kanban-card-desc,
+            .kanban-card-date,
+            .kanban-card-time {
+              font-size: 0.9rem;
+              color: #555;
+            }
+
+            .kanban-delete-btn {
+              position: absolute;
+              top: 0.5rem;
+              right: 0.5rem;
+              background: none;
+              border: none;
+              font-size: 1.3rem;
+              color: #d32f2f;
+              cursor: pointer;
+              transition: color 0.2s;
+
+              &:hover {
+                color: #b71c1c;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

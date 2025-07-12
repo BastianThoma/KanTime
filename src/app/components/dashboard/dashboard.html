@@ -1,18 +1,19 @@
-<h1>⏱️ Mein Arbeitstag</h1>
 
-<div class="controls">
-  <label for="task">Task wählen:</label>
-  <input id="task" placeholder="TASK-TEST" />
+<div class="dashboard-container">
+  <h1 class="dashboard-title">⏱️ Mein Arbeitstag</h1>
 
-  <button (click)="start()" [disabled]="isWorking()">▶ Start</button>
-  <button (click)="pause()" [disabled]="!isWorking() || isPaused()">
-    ⏸ Pause
-  </button>
-  <button (click)="resume()" [disabled]="!isPaused()">⏵ Weiter</button>
-  <button (click)="stop()" [disabled]="!isWorking()">⏹ Stop</button>
+  <div class="controls">
+    <label for="task" class="controls-label">Task wählen:</label>
+    <input id="task" class="controls-input" placeholder="TASK-TEST" />
+
+    <button class="controls-btn" (click)="start()" [disabled]="isWorking()">▶ Start</button>
+    <button class="controls-btn" (click)="pause()" [disabled]="!isWorking() || isPaused()">⏸ Pause</button>
+    <button class="controls-btn" (click)="resume()" [disabled]="!isPaused()">⏵ Weiter</button>
+    <button class="controls-btn" (click)="stop()" [disabled]="!isWorking()">⏹ Stop</button>
+  </div>
+
+  <p class="dashboard-worked">🧮 Arbeitszeit: <strong>{{ format(totalWorked()) }}</strong></p>
+
+  <button class="dashboard-tasks-btn" routerLink="/tasks">🗂️ Zu den Tasks</button>
 </div>
-
-<p>🧮 Arbeitszeit: <strong>{{ format(totalWorked()) }}</strong></p>
-
-<button routerLink="/tasks">🗂️ Zu den Tasks</button>
 

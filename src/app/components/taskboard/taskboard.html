@@ -1,77 +1,65 @@
-<div class="p-4 max-w-md mx-auto bg-red-200">
-  <h2 class="text-xl font-bold mb-4">Neue Aufgabe</h2>
-  <div class="flex gap-2 mb-6">
-    <input
-      [(ngModel)]="newTitle"
-      type="text"
-      placeholder="Aufgabe eingeben"
-      class="flex-1 border rounded px-2 py-1"
-    />
-    <button (click)="addTask()" class="bg-blue-600 text-white px-3 py-1 rounded">
-      Hinzufügen
-    </button>
+
+<div class="kanban-container">
+  <h2 class="kanban-title">Neue Aufgabe</h2>
+  <div class="kanban-input-row">
+    <input [(ngModel)]="newTitle" type="text" placeholder="Aufgabe eingeben" class="kanban-input" />
+    <button (click)="addTask()" class="kanban-add-btn">Hinzufügen</button>
   </div>
 
-  <div class="grid grid-cols-3 gap-4">
-    <div>
-      <h3 class="text-lg font-semibold mb-2">To Do</h3>
-      <ul class="flex flex-col gap-4">
-        <li *ngFor="let task of todoTasks$ | async">
-          <div class="relative bg-white rounded-xl shadow-lg p-5 flex flex-col gap-2 border hover:border-blue-400 transition-all">
-            <button (click)="deleteTask(task.id)" class="absolute top-3 right-3 text-red-500 hover:text-red-700 bg-white rounded-full p-1 shadow-md">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 7h12M9 7V5a3 3 0 013-3v0a3 3 0 013 3v2m-6 0v12a2 2 0 002 2h4a2 2 0 002-2V7" />
-              </svg>
+  <div class="kanban-board">
+    <div class="kanban-column" data-status="todo">
+      <h3 class="kanban-column-title">To Do</h3>
+      <ul class="kanban-list" data-dropzone="todo">
+        <li *ngFor="let task of todoTasks$ | async" class="kanban-card" [attr.data-task-id]="task.id" draggable="true">
+          <div class="kanban-card-content">
+            <button (click)="deleteTask(task.id)" class="kanban-delete-btn" title="Löschen">
+              🗑️
             </button>
-            <strong class="text-xl text-blue-700">{{ task.title }}</strong>
-            <span class="text-xs text-gray-400">ID: {{ task.id }}</span>
-            <span class="text-sm text-gray-600">Status: <span class="font-semibold">{{ task.status }}</span></span>
-            <span class="text-sm text-gray-600">Beschreibung: <span class="font-light">{{ task.description || '-' }}</span></span>
-            <span class="text-xs text-gray-400">Erstellt: {{ task.createdAt | date:'short' }}</span>
-            <span class="text-xs text-gray-400">Letzte Änderung: {{ task.updatedAt | date:'short' }}</span>
-            <span class="text-xs text-gray-400">Tracked Time: {{ task.totalTrackedTime }} Sek.</span>
+            <strong class="kanban-card-title">{{ task.title }}</strong>
+            <span class="kanban-card-id">ID: {{ task.id }}</span>
+            <span class="kanban-card-status">Status: {{ task.status }}</span>
+            <span class="kanban-card-desc">Beschreibung: {{ task.description || '-' }}</span>
+            <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'short' }}</span>
+            <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'short' }}</span>
+            <span class="kanban-card-time">Tracked Time: {{ task.totalTrackedTime }} Sek.</span>
           </div>
         </li>
       </ul>
     </div>
-    <div>
-      <h3 class="text-lg font-semibold mb-2">In Progress</h3>
-      <ul class="flex flex-col gap-4">
-        <li *ngFor="let task of inProgressTasks$ | async">
-          <div class="relative bg-white rounded-xl shadow-lg p-5 flex flex-col gap-2 border hover:border-blue-400 transition-all">
-            <button (click)="deleteTask(task.id)" class="absolute top-3 right-3 text-red-500 hover:text-red-700 bg-white rounded-full p-1 shadow-md">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 7h12M9 7V5a3 3 0 013-3v0a3 3 0 013 3v2m-6 0v12a2 2 0 002 2h4a2 2 0 002-2V7" />
-              </svg>
+    <div class="kanban-column" data-status="in-progress">
+      <h3 class="kanban-column-title">In Progress</h3>
+      <ul class="kanban-list" data-dropzone="in-progress">
+        <li *ngFor="let task of inProgressTasks$ | async" class="kanban-card" [attr.data-task-id]="task.id" draggable="true">
+          <div class="kanban-card-content">
+            <button (click)="deleteTask(task.id)" class="kanban-delete-btn" title="Löschen">
+              🗑️
             </button>
-            <strong class="text-xl text-blue-700">{{ task.title }}</strong>
-            <span class="text-xs text-gray-400">ID: {{ task.id }}</span>
-            <span class="text-sm text-gray-600">Status: <span class="font-semibold">{{ task.status }}</span></span>
-            <span class="text-sm text-gray-600">Beschreibung: <span class="font-light">{{ task.description || '-' }}</span></span>
-            <span class="text-xs text-gray-400">Erstellt: {{ task.createdAt | date:'short' }}</span>
-            <span class="text-xs text-gray-400">Letzte Änderung: {{ task.updatedAt | date:'short' }}</span>
-            <span class="text-xs text-gray-400">Tracked Time: {{ task.totalTrackedTime }} Sek.</span>
+            <strong class="kanban-card-title">{{ task.title }}</strong>
+            <span class="kanban-card-id">ID: {{ task.id }}</span>
+            <span class="kanban-card-status">Status: {{ task.status }}</span>
+            <span class="kanban-card-desc">Beschreibung: {{ task.description || '-' }}</span>
+            <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'short' }}</span>
+            <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'short' }}</span>
+            <span class="kanban-card-time">Tracked Time: {{ task.totalTrackedTime }} Sek.</span>
           </div>
         </li>
       </ul>
     </div>
-    <div>
-      <h3 class="text-lg font-semibold mb-2">Done</h3>
-      <ul class="flex flex-col gap-4">
-        <li *ngFor="let task of doneTasks$ | async">
-          <div class="relative bg-white rounded-xl shadow-lg p-5 flex flex-col gap-2 border hover:border-blue-400 transition-all">
-            <button (click)="deleteTask(task.id)" class="absolute top-3 right-3 text-red-500 hover:text-red-700 bg-white rounded-full p-1 shadow-md">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 7h12M9 7V5a3 3 0 013-3v0a3 3 0 013 3v2m-6 0v12a2 2 0 002 2h4a2 2 0 002-2V7" />
-              </svg>
+    <div class="kanban-column" data-status="done">
+      <h3 class="kanban-column-title">Done</h3>
+      <ul class="kanban-list" data-dropzone="done">
+        <li *ngFor="let task of doneTasks$ | async" class="kanban-card" [attr.data-task-id]="task.id" draggable="true">
+          <div class="kanban-card-content">
+            <button (click)="deleteTask(task.id)" class="kanban-delete-btn" title="Löschen">
+              🗑️
             </button>
-            <strong class="text-xl text-blue-700">{{ task.title }}</strong>
-            <span class="text-xs text-gray-400">ID: {{ task.id }}</span>
-            <span class="text-sm text-gray-600">Status: <span class="font-semibold">{{ task.status }}</span></span>
-            <span class="text-sm text-gray-600">Beschreibung: <span class="font-light">{{ task.description || '-' }}</span></span>
-            <span class="text-xs text-gray-400">Erstellt: {{ task.createdAt | date:'short' }}</span>
-            <span class="text-xs text-gray-400">Letzte Änderung: {{ task.updatedAt | date:'short' }}</span>
-            <span class="text-xs text-gray-400">Tracked Time: {{ task.totalTrackedTime }} Sek.</span>
+            <strong class="kanban-card-title">{{ task.title }}</strong>
+            <span class="kanban-card-id">ID: {{ task.id }}</span>
+            <span class="kanban-card-status">Status: {{ task.status }}</span>
+            <span class="kanban-card-desc">Beschreibung: {{ task.description || '-' }}</span>
+            <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'short' }}</span>
+            <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'short' }}</span>
+            <span class="kanban-card-time">Tracked Time: {{ task.totalTrackedTime }} Sek.</span>
           </div>
         </li>
       </ul>
