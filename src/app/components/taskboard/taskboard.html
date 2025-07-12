@@ -18,8 +18,8 @@
             </button>
             <strong class="kanban-card-title">{{ task.title }}</strong>
             <span class="kanban-card-desc">Beschreibung: {{ task.description || '-' }}</span>
-            <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'short' }}</span>
-            <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'short' }}</span>
+            <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'dd.MM.yyyy, HH:mm' }}</span>
+            <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'dd.MM.yyyy, HH:mm' }}</span>
             <span class="kanban-card-time">Tracked Time: {{ task.totalTrackedTime }} Sek.</span>
           </div>
         </li>
@@ -35,8 +35,8 @@
             </button>
             <strong class="kanban-card-title">{{ task.title }}</strong>
             <span class="kanban-card-desc">Beschreibung: {{ task.description || '-' }}</span>
-            <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'short' }}</span>
-            <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'short' }}</span>
+            <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'dd.MM.yyyy, HH:mm' }}</span>
+            <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'dd.MM.yyyy, HH:mm' }}</span>
             <span class="kanban-card-time">Tracked Time: {{ task.totalTrackedTime }} Sek.</span>
           </div>
         </li>
@@ -52,8 +52,8 @@
             </button>
             <strong class="kanban-card-title">{{ task.title }}</strong>
             <span class="kanban-card-desc">Beschreibung: {{ task.description || '-' }}</span>
-            <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'short' }}</span>
-            <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'short' }}</span>
+            <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'dd.MM.yyyy, HH:mm' }}</span>
+            <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'dd.MM.yyyy, HH:mm' }}</span>
             <span class="kanban-card-time">Tracked Time: {{ task.totalTrackedTime }} Sek.</span>
           </div>
         </li>
