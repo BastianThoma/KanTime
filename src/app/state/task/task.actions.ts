@@ -1,3 +1,7 @@
+export const updateTrackedTime = createAction(
+  '[Task] Update Tracked Time',
+  props<{ id: string; totalTrackedTime: number }>()
+);
 import { createAction, props } from '@ngrx/store';
 import { Task } from './task.model';
 

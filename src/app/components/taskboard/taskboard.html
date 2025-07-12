@@ -3,21 +3,20 @@
   <h2 class="kanban-title">Neue Aufgabe</h2>
   <div class="kanban-input-row">
     <input [(ngModel)]="newTitle" type="text" placeholder="Aufgabe eingeben" class="kanban-input" />
+    <textarea [(ngModel)]="newDescription" placeholder="Beschreibung (optional)" class="kanban-input" rows="2"></textarea>
     <button (click)="addTask()" class="kanban-add-btn">Hinzufügen</button>
   </div>
 
-  <div class="kanban-board">
+  <div class="kanban-board" cdkDropListGroup>
     <div class="kanban-column" data-status="todo">
       <h3 class="kanban-column-title">To Do</h3>
-      <ul class="kanban-list" data-dropzone="todo">
-        <li *ngFor="let task of todoTasks$ | async" class="kanban-card" [attr.data-task-id]="task.id" draggable="true">
+      <ul class="kanban-list" cdkDropList id="todoList" [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="onDrop($event, 'todo')">
+        <li *ngFor="let task of todoTasks$ | async" class="kanban-card" [attr.data-task-id]="task.id" cdkDrag>
           <div class="kanban-card-content">
             <button (click)="deleteTask(task.id)" class="kanban-delete-btn" title="Löschen">
               🗑️
             </button>
             <strong class="kanban-card-title">{{ task.title }}</strong>
-            <span class="kanban-card-id">ID: {{ task.id }}</span>
-            <span class="kanban-card-status">Status: {{ task.status }}</span>
             <span class="kanban-card-desc">Beschreibung: {{ task.description || '-' }}</span>
             <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'short' }}</span>
             <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'short' }}</span>
@@ -28,15 +27,13 @@
     </div>
     <div class="kanban-column" data-status="in-progress">
       <h3 class="kanban-column-title">In Progress</h3>
-      <ul class="kanban-list" data-dropzone="in-progress">
-        <li *ngFor="let task of inProgressTasks$ | async" class="kanban-card" [attr.data-task-id]="task.id" draggable="true">
+      <ul class="kanban-list" cdkDropList id="inProgressList" [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="onDrop($event, 'in-progress')">
+        <li *ngFor="let task of inProgressTasks$ | async" class="kanban-card" [attr.data-task-id]="task.id" cdkDrag>
           <div class="kanban-card-content">
             <button (click)="deleteTask(task.id)" class="kanban-delete-btn" title="Löschen">
               🗑️
             </button>
             <strong class="kanban-card-title">{{ task.title }}</strong>
-            <span class="kanban-card-id">ID: {{ task.id }}</span>
-            <span class="kanban-card-status">Status: {{ task.status }}</span>
             <span class="kanban-card-desc">Beschreibung: {{ task.description || '-' }}</span>
             <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'short' }}</span>
             <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'short' }}</span>
@@ -47,15 +44,13 @@
     </div>
     <div class="kanban-column" data-status="done">
       <h3 class="kanban-column-title">Done</h3>
-      <ul class="kanban-list" data-dropzone="done">
-        <li *ngFor="let task of doneTasks$ | async" class="kanban-card" [attr.data-task-id]="task.id" draggable="true">
+      <ul class="kanban-list" cdkDropList id="doneList" [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="onDrop($event, 'done')">
+        <li *ngFor="let task of doneTasks$ | async" class="kanban-card" [attr.data-task-id]="task.id" cdkDrag>
           <div class="kanban-card-content">
             <button (click)="deleteTask(task.id)" class="kanban-delete-btn" title="Löschen">
               🗑️
             </button>
             <strong class="kanban-card-title">{{ task.title }}</strong>
-            <span class="kanban-card-id">ID: {{ task.id }}</span>
-            <span class="kanban-card-status">Status: {{ task.status }}</span>
             <span class="kanban-card-desc">Beschreibung: {{ task.description || '-' }}</span>
             <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'short' }}</span>
             <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'short' }}</span>

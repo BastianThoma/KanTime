@@ -35,8 +35,21 @@ export const taskReducer = createReducer(
     tasks: state.tasks.map(t =>
       t.id === id ? { ...t, status, updatedAt: Date.now() } : t
     )
-  }))
-  ,
+  })),
+  on(TaskActions.moveTask, (state, { id, status }) => ({
+    ...state,
+    tasks: state.tasks.map(t =>
+      t.id === id ? { ...t, status, updatedAt: Date.now() } : t
+    )
+  })),
+
+  on(TaskActions.updateTrackedTime, (state, { id, totalTrackedTime }) => ({
+    ...state,
+    tasks: state.tasks.map(t =>
+      t.id === id ? { ...t, totalTrackedTime, updatedAt: Date.now() } : t
+    )
+  })),
+
   on(TaskActions.loadTasksSuccess, (state, { tasks }) => ({
     ...state,
     tasks: tasks

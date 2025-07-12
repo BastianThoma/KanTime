@@ -4,7 +4,11 @@
 
   <div class="controls">
     <label for="task" class="controls-label">Task wählen:</label>
-    <input id="task" class="controls-input" placeholder="TASK-TEST" />
+    <select id="task" class="controls-input" [(ngModel)]="selectedTaskId">
+      <option *ngFor="let task of tasks$ | async" [value]="task.id">
+        {{ task.title }}
+      </option>
+    </select>
 
     <button class="controls-btn" (click)="start()" [disabled]="isWorking()">▶ Start</button>
     <button class="controls-btn" (click)="pause()" [disabled]="!isWorking() || isPaused()">⏸ Pause</button>
