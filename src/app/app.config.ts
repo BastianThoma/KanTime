@@ -17,6 +17,7 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { timeReducer } from './state/time/time.reducer';
 import { TimeEffects } from './state/time/time.effects';
 import { taskReducer } from './state/task/task.reducer';
+import { TaskEffects } from './state/task/task.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,7 +25,7 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideStore({ time: timeReducer, task: taskReducer }),
-    provideEffects(TimeEffects),
+    provideEffects(TimeEffects, TaskEffects),
     provideStoreDevtools({ maxAge: 25 }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),

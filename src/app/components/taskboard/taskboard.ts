@@ -3,9 +3,9 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Task } from '../../state/task/task.model';
-import { addTask } from '../../state/task/task.actions';
-import { v4 as uuid } from 'uuid';
+import * as TaskActions from '../../state/task/task.actions';
 import { selectTasksByStatus } from '../../state/task/task.selectors';
+import { TaskService } from '../../state/task/task.service';
 
 @Component({
   selector: 'app-taskboard',
@@ -13,18 +13,29 @@ import { selectTasksByStatus } from '../../state/task/task.selectors';
   templateUrl: './taskboard.html',
   styleUrl: './taskboard.scss',
 })
-
 export class Taskboard {
   private store = inject(Store);
+  private taskService = inject(TaskService);
 
   newTitle = '';
-  todoTasks$ = this.store.select(selectTasksByStatus('todo'));
 
-  addTask() {
+  todoTasks$ = this.store.select(selectTasksByStatus('todo'));
+  inProgressTasks$ = this.store.select(selectTasksByStatus('in-progress'));
+  doneTasks$ = this.store.select(selectTasksByStatus('done'));
+
+  constructor() {
+    this.store.dispatch(TaskActions.loadTasks());
+  }
+  async deleteTask(id: string) {
+    await this.taskService.deleteTask(id);
+    this.store.dispatch(TaskActions.loadTasks());
+  }
+
+  async addTask() {
     if (!this.newTitle.trim()) return;
 
-    const task: Task = {
-      id: uuid(),
+    // Task mit temporärer ID anlegen, Firestore generiert später die echte ID
+    const newTask: Omit<Task, 'id'> = {
       title: this.newTitle,
       status: 'todo',
       createdAt: Date.now(),
@@ -32,7 +43,11 @@ export class Taskboard {
       totalTrackedTime: 0,
     };
 
-    this.store.dispatch(addTask({ task }));
+    // TaskService direkt nutzen, da die ID erst nach Firestore-Insert bekannt ist
+    await this.taskService.addTask(newTask);
+
+    // Tasks neu laden, damit die ID im State ist
+    this.store.dispatch(TaskActions.loadTasks());
     this.newTitle = '';
   }
 }

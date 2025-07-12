@@ -6,6 +6,7 @@ import {
   addDoc,
   deleteDoc,
   doc,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Task } from './task.model';
@@ -24,11 +25,15 @@ export class TaskService {
     >;
   }
 
-  addTask(task: Task) {
+  addTask(task: Omit<Task, 'id'>) {
     return addDoc(this.taskCollection, task);
   }
 
   deleteTask(id: string) {
     return deleteDoc(doc(this.taskCollection.firestore, 'tasks', id));
+  }
+
+  updateTask(id: string, changes: Partial<Task>) {
+    return updateDoc(doc(this.taskCollection.firestore, 'tasks', id), changes);
   }
 }

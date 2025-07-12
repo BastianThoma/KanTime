@@ -36,4 +36,9 @@ export const taskReducer = createReducer(
       t.id === id ? { ...t, status, updatedAt: Date.now() } : t
     )
   }))
+  ,
+  on(TaskActions.loadTasksSuccess, (state, { tasks }) => ({
+    ...state,
+    tasks: tasks
+  }))
 );
