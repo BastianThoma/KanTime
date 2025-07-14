@@ -4,6 +4,7 @@
   <div class="kanban-input-row">
     <input [(ngModel)]="newTitle" type="text" placeholder="Aufgabe eingeben" class="kanban-input" />
     <textarea [(ngModel)]="newDescription" placeholder="Beschreibung (optional)" class="kanban-input" rows="2"></textarea>
+    <input [(ngModel)]="newDeadline" type="date" class="kanban-input" placeholder="Deadline" />
     <button (click)="addTask()" class="kanban-add-btn">Hinzufügen</button>
   </div>
 

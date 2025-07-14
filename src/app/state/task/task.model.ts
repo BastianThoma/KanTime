@@ -6,4 +6,5 @@ export interface Task {
   createdAt: number;
   updatedAt: number;
   totalTrackedTime: number; // in Sekunden
+  deadline?: number; // Timestamp (ms) für Deadline
 }

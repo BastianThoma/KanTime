@@ -21,6 +21,7 @@ export class Taskboard {
 
   newTitle = '';
   newDescription = '';
+  newDeadline: string = '';
 
   todoTasks$ = this.store.select(selectTasksByStatus('todo'));
   inProgressTasks$ = this.store.select(selectTasksByStatus('in-progress'));
@@ -38,7 +39,12 @@ export class Taskboard {
   async addTask() {
     if (!this.newTitle.trim()) return;
 
-    // Task mit temporärer ID anlegen, Firestore generiert später die echte ID
+    let deadlineTs: number | undefined = undefined;
+    if (this.newDeadline) {
+      // Datepicker liefert yyyy-MM-dd, umwandeln in Timestamp (ms)
+      deadlineTs = new Date(this.newDeadline).getTime();
+    }
+
     const newTask: Omit<Task, 'id'> = {
       title: this.newTitle,
       description: this.newDescription,
@@ -46,15 +52,14 @@ export class Taskboard {
       createdAt: Date.now(),
       updatedAt: Date.now(),
       totalTrackedTime: 0,
+      deadline: deadlineTs,
     };
 
-    // TaskService direkt nutzen, da die ID erst nach Firestore-Insert bekannt ist
     await this.taskService.addTask(newTask);
-
-    // Tasks neu laden, damit die ID im State ist
     this.store.dispatch(TaskActions.loadTasks());
     this.newTitle = '';
     this.newDescription = '';
+    this.newDeadline = '';
   }
 
   onDrop(event: any, newStatus: 'todo' | 'in-progress' | 'done') {

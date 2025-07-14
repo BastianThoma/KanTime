@@ -1,0 +1,111 @@
+// Modernes Dashboard-Layout
+.dashboard-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #f8f9fa;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.08);
+}
+
+.dashboard-title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 32px;
+  color: #2c3e50;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 28px;
+}
+
+.dashboard-tile {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(44,62,80,0.07);
+  padding: 28px 22px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: box-shadow 0.2s;
+  position: relative;
+}
+.dashboard-tile:hover {
+  box-shadow: 0 6px 24px rgba(44,62,80,0.13);
+}
+.tile-icon {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+}
+.tile-label {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #34495e;
+}
+.tile-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2980b9;
+  margin-bottom: 8px;
+}
+.tile-sub {
+  font-size: 1rem;
+  color: #7f8c8d;
+  margin-bottom: 8px;
+}
+.tile-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px 0;
+}
+.tile-list li {
+  font-size: 1rem;
+  margin-bottom: 4px;
+  color: #2c3e50;
+}
+.tile-task-time, .tile-task-date {
+  font-size: 0.95rem;
+  color: #16a085;
+  margin-left: 8px;
+}
+.tile-btn {
+  margin-top: 10px;
+  background: #2980b9;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.tile-btn:hover {
+  background: #1abc9c;
+}
+.dashboard-shortcuts {
+  background: linear-gradient(90deg, #e0eafc 0%, #cfdef3 100%);
+  box-shadow: 0 2px 12px rgba(44,62,80,0.04);
+}
+.tile-shortcut-btns {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+.tile-shortcut-btns button {
+  background: #fff;
+  color: #2980b9;
+  border: 1px solid #2980b9;
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.tile-shortcut-btns button:hover {
+  background: #2980b9;
+  color: #fff;
+}

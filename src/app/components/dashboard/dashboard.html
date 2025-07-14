@@ -1,9 +1,62 @@
 
-<div>
-  <h1>⏱️ Mein Arbeitstag</h1>
 
-  <button routerLink="/tasks">🗂️ Zu den Tasks</button>
-  <button routerLink="/workday-tracker">📊 Arbeitszeit-Chart</button>
-  <button routerLink="/workday-calendar">📅 Arbeitszeit-Kalender</button>
+<div class="dashboard-container">
+  <h1 class="dashboard-title">👋 Willkommen zum KanTime Dashboard</h1>
+  <div class="dashboard-grid">
+    <!-- Arbeitszeit heute -->
+    <div class="dashboard-tile">
+      <div class="tile-icon">⏱️</div>
+      <div class="tile-label">Arbeitszeit heute</div>
+      <div class="tile-value">{{ formatTime(+((todayWorked | async) || 0)) }}</div>
+      <button routerLink="/workday-calendar" class="tile-btn">Details</button>
+    </div>
+
+    <!-- Aktive Tasks -->
+    <div class="dashboard-tile">
+      <div class="tile-icon">�</div>
+      <div class="tile-label">Aktive Tasks</div>
+      <ul class="tile-list">
+        <li *ngFor="let task of topTasks">{{ task.title }} <span class="tile-task-time">{{ formatTime(task.totalTrackedTime) }}</span></li>
+      </ul>
+      <button routerLink="/tasks" class="tile-btn">Alle Tasks</button>
+    </div>
+
+    <!-- Letzter Arbeitstag -->
+    <div class="dashboard-tile">
+      <div class="tile-icon">📅</div>
+      <div class="tile-label">Letzter Arbeitstag</div>
+      <div class="tile-value">{{ lastWorkday && lastWorkday.date ? (formatDate(lastWorkday.date)) : '-' }}</div>
+      <div class="tile-sub">{{ lastWorkday?.sections?.length || 0 }} Abschnitte</div>
+      <button routerLink="/workday-calendar" class="tile-btn">Im Kalender</button>
+    </div>
+
+    <!-- Gesamtstatistik -->
+    <div class="dashboard-tile">
+      <div class="tile-icon">📊</div>
+      <div class="tile-label">Gesamtstatistik</div>
+      <div class="tile-value">{{ totalWorkedAll | async }}</div>
+      <button routerLink="/workday-calendar" class="tile-btn">Statistik</button>
+    </div>
+
+    <!-- Deadlines/Planung -->
+    <div class="dashboard-tile">
+      <div class="tile-icon">⏳</div>
+      <div class="tile-label">Nächste Deadlines</div>
+      <ul class="tile-list">
+        <li *ngFor="let task of upcomingTasks">{{ task.title }} <span class="tile-task-date">{{ formatDate(task.deadline ?? '') }}</span></li>
+      </ul>
+      <button routerLink="/tasks" class="tile-btn">Planung</button>
+    </div>
+
+    <!-- Schnellzugriff -->
+    <div class="dashboard-tile dashboard-shortcuts">
+      <div class="tile-label">Schnellzugriff</div>
+      <div class="tile-shortcut-btns">
+        <button routerLink="/tasks">🗂️ Tasks</button>
+        <button routerLink="/workday-calendar">📅 Kalender</button>
+        <button routerLink="/workday-tracker">⏱️ Tracker</button>
+      </div>
+    </div>
+  </div>
 </div>
 

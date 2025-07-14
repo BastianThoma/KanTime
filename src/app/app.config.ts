@@ -18,13 +18,14 @@ import { timeReducer } from './state/time/time.reducer';
 import { TimeEffects } from './state/time/time.effects';
 import { taskReducer } from './state/task/task.reducer';
 import { TaskEffects } from './state/task/task.effects';
+import { workdayReducer } from './state/workday/workday.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
-    provideStore({ time: timeReducer, task: taskReducer }),
+    provideStore({ time: timeReducer, task: taskReducer, workday: workdayReducer }),
     provideEffects(TimeEffects, TaskEffects),
     provideStoreDevtools({ maxAge: 25 }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
