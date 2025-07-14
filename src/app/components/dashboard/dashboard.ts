@@ -48,7 +48,8 @@ export class Dashboard {
   }
 
   stop() {
-    this.store.dispatch(TimeActions.stopWorkDay());
+    console.log('Dashboard stop()', { selectedTaskId: this.selectedTaskId, totalWorked: this.totalWorked() });
+    this.store.dispatch(TimeActions.stopWorkDay({ totalWorked: this.totalWorked(), taskId: this.selectedTaskId! }));
   }
 
   format(ms: number): string {

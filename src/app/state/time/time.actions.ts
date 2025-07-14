@@ -9,7 +9,7 @@ export const pauseWork = createAction('[Time] Pause Work');
 
 export const resumeWork = createAction('[Time] Resume Work');
 
-export const stopWorkDay = createAction('[Time] Stop Work Day');
+export const stopWorkDay = createAction('[Time] Stop Work Day', props<{ totalWorked: number; taskId: string }>());
 
 export const tickTime = createAction(
   '[Time] Tick Time',
