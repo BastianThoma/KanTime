@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { WorkdayService } from '../../state/workday/workday.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { selectTotalWorked } from '../../state/time/time.selectors';
@@ -18,49 +19,79 @@ import { selectWorkdays } from '../../state/workday/workday.selectors';
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
-  todayWorked: Observable<string>;
+  loadTodayWorked = async () => {
+    const userId = 'testuser';
+    const todayIso = new Date().toISOString().slice(0, 10);
+    const workdays = await this.workdayService.getWorkdays(userId);
+    const todayWorkdays = workdays.filter((wd) => wd.date === todayIso);
+    let totalSeconds = 0;
+    if (todayWorkdays.length > 0) {
+      const workSections = todayWorkdays.flatMap(wd => wd.sections.filter(s => s.type === 'work'));
+      console.log('Alle Work-Abschnitte heute (alle Workdays):', workSections);
+      totalSeconds = workSections
+        .reduce(
+          (sum, s) =>
+            sum + Math.floor(((s.end ?? Date.now()) - s.start) / 1000),
+          0
+        );
+      this.todayWorked = totalSeconds;
+      console.log('Arbeitszeit heute (Sekunden, alle Workdays):', totalSeconds);
+    } else {
+      console.log('Kein Workday für heute gefunden.');
+    }
+  };
+  todayWorked: number = 0;
   topTasks: Task[] = [];
   lastWorkday: Workday | null = null;
   totalWorkedAll: Observable<string>;
   upcomingTasks: Task[] = [];
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private workdayService: WorkdayService) {
     // Daten beim Initialisieren laden
     this.store.dispatch({ type: '[Task] Load Tasks' });
     this.store.dispatch({ type: '[Workday] Load Workdays' });
 
-    this.todayWorked = this.store.select(selectTotalWorked).pipe(
-      map(ms => this.formatMinutes(ms))
-    );
+    this.totalWorkedAll = this.store
+      .select(selectAllTasks)
+      .pipe(
+        map((tasks) =>
+          this.formatMinutes(
+            tasks.reduce((sum, t) => sum + (t.totalTrackedTime || 0) * 1000, 0)
+          )
+        )
+      );
 
-    this.totalWorkedAll = this.store.select(selectAllTasks).pipe(
-      map(tasks => this.formatMinutes(tasks.reduce((sum, t) => sum + (t.totalTrackedTime || 0) * 1000, 0)))
-    );
-
-    this.store.select(selectAllTasks).subscribe(tasks => {
+    this.store.select(selectAllTasks).subscribe((tasks) => {
       this.topTasks = tasks
-        .filter(t => t.status === 'in-progress')
+        .filter((t) => t.status === 'in-progress')
         .sort((a, b) => (b.totalTrackedTime || 0) - (a.totalTrackedTime || 0))
         .slice(0, 3);
       this.upcomingTasks = tasks
-        .filter(t => !!(t as any).deadline)
+        .filter((t) => !!(t as any).deadline)
         .sort((a, b) => ((a as any).deadline || 0) - ((b as any).deadline || 0))
         .slice(0, 3);
     });
 
-    this.store.select(selectWorkdays).subscribe(workdays => {
+    this.store.select(selectWorkdays).subscribe((workdays) => {
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
       const yDate = yesterday.toISOString().slice(0, 10);
       const wds = workdays as Workday[];
-      this.lastWorkday = wds.filter((wd: Workday) => wd.date === yDate)[0] || null;
+      this.lastWorkday =
+        wds.filter((wd: Workday) => wd.date === yDate)[0] || null;
+      // Arbeitszeit heute bei jeder Änderung neu berechnen
+      this.loadTodayWorked();
     });
   }
 
   formatDate(date: string | number): string {
     if (!date) return '-';
     const d = new Date(typeof date === 'string' ? date : Number(date));
-    return d.toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    return d.toLocaleDateString('de-DE', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
   }
 
   formatMinutes(ms: number): string {

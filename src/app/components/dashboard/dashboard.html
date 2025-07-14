@@ -7,7 +7,7 @@
     <div class="dashboard-tile">
       <div class="tile-icon">⏱️</div>
       <div class="tile-label">Arbeitszeit heute</div>
-      <div class="tile-value">{{ formatTime(+((todayWorked | async) || 0)) }}</div>
+      <div class="tile-value">{{ formatTime(todayWorked) }}</div>
       <button routerLink="/workday-calendar" class="tile-btn">Details</button>
     </div>
 
