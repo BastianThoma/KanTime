@@ -1,25 +1,9 @@
 
-<div class="dashboard-container">
-  <h1 class="dashboard-title">⏱️ Mein Arbeitstag</h1>
+<div>
+  <h1>⏱️ Mein Arbeitstag</h1>
 
-  <div class="controls">
-    <label for="task" class="controls-label">Task wählen:</label>
-    <select id="task" class="controls-input" [(ngModel)]="selectedTaskId">
-      <option *ngFor="let task of tasks$ | async" [value]="task.id">
-        {{ task.title }}
-      </option>
-    </select>
-
-    <button class="controls-btn" (click)="start()" [disabled]="isWorking()">▶ Start</button>
-    <button class="controls-btn" (click)="pause()" [disabled]="!isWorking() || isPaused()">⏸ Pause</button>
-    <button class="controls-btn" (click)="resume()" [disabled]="!isPaused()">⏵ Weiter</button>
-    <button class="controls-btn" (click)="stop()" [disabled]="!isWorking()">⏹ Stop</button>
-  </div>
-
-  <p class="dashboard-worked">🧮 Arbeitszeit: <strong>{{ format(totalWorked()) }}</strong></p>
-
-  <button class="dashboard-tasks-btn" routerLink="/tasks">🗂️ Zu den Tasks</button>
-  <button class="dashboard-tasks-btn" routerLink="/workday-tracker">📊 Arbeitszeit-Chart</button>
-  <button class="dashboard-tasks-btn" routerLink="/workday-calendar">📅 Arbeitszeit-Kalender</button>
+  <button routerLink="/tasks">🗂️ Zu den Tasks</button>
+  <button routerLink="/workday-tracker">📊 Arbeitszeit-Chart</button>
+  <button routerLink="/workday-calendar">📅 Arbeitszeit-Kalender</button>
 </div>
 
