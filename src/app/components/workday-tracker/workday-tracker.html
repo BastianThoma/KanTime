@@ -1,0 +1,50 @@
+<div class="workday-tracker-container">
+  <h2>Arbeitszeit-Tracker</h2>
+  <div class="workday-controls">
+    <label for="task-select">Task wählen:</label>
+    <select id="task-select" [(ngModel)]="selectedTaskId">
+      <option *ngFor="let task of tasks$ | async" [value]="task.id">{{ task.title }}</option>
+    </select>
+    <button (click)="startWorkday()" [disabled]="!selectedTaskId">Start</button>
+    <button (click)="pauseWorkday()" [disabled]="!selectedTaskId">Pause</button>
+    <button (click)="resumeWorkday()" [disabled]="!selectedTaskId">Weiter</button>
+    <button (click)="stopWorkday()" [disabled]="!selectedTaskId">Stopp</button>
+  </div>
+  <div class="workday-chart">
+    <ng-container *ngIf="timeState$ | async as state">
+      <div class="active-task">
+        <span *ngIf="state.sections.length > 0 && state.sections[state.sections.length-1].type === 'work'">
+          Aktive Task: <strong>{{ getTaskTitle(state.sections[state.sections.length-1].taskId) }}</strong>
+        </span>
+      </div>
+      <div class="chart-bar">
+        <ng-container *ngFor="let section of state.sections; let i = index">
+          <ng-container *ngIf="section.type === 'work'; else pauseBlock">
+            <div
+              class="chart-section work"
+              [style.width.%]="sectionWidths[i]"
+              [title]="getTaskTitle(section.taskId) + ' | ' + formatTime(section.start) + ' - ' + formatTime(section.end)"
+            >
+              <span class="chart-label">
+                {{ getTaskTitle(section.taskId) }}<br>
+                {{ formatTime(section.start) }} - {{ formatTime(section.end) }}
+              </span>
+            </div>
+          </ng-container>
+          <ng-template #pauseBlock>
+            <div
+              class="chart-section pause"
+              [style.width.%]="sectionWidths[i]"
+              [title]="'Pause | ' + formatTime(section.start) + ' - ' + formatTime(section.end)"
+            >
+              <span class="chart-label">
+                Pause<br>
+                {{ formatTime(section.start) }} - {{ formatTime(section.end) }}
+              </span>
+            </div>
+          </ng-template>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</div>

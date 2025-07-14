@@ -1,3 +1,12 @@
+export const startSection = createAction(
+  '[Time] Start Section',
+  props<{ start: number; sectionType: 'work' | 'pause'; taskId?: string }>()
+);
+
+export const endSection = createAction(
+  '[Time] End Section',
+  props<{ end: number }>()
+);
 import { createAction, props } from '@ngrx/store';
 
 export const startWorkDay = createAction(
