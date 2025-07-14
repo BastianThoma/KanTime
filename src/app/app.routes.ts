@@ -16,4 +16,8 @@ export const routes: Routes = [
         path: 'workday-tracker',
         component: WorkdayTracker,
     },
+    {
+        path: 'workday-calendar',
+        loadComponent: () => import('./components/workday-calendar/workday-calendar').then(m => m.WorkdayCalendar),
+    },
 ];

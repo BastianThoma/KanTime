@@ -73,15 +73,23 @@ export class WorkdayTracker {
     this.store.dispatch(endSection({ end: Date.now() }));
     // Workday speichern
     this.timeState$.subscribe(state => {
+      let tasks: any[] = [];
+      this.tasks$.subscribe(t => (tasks = t)).unsubscribe();
       const cleanSections = state.sections.map(section => {
         const s: any = { ...section };
         if (s.taskId === undefined) delete s.taskId;
+        if (s.taskId) {
+          const found = tasks.find(task => task.id === s.taskId);
+          s.taskTitle = found ? found.title : s.taskId;
+        }
         return s;
       });
+      // TODO: User-ID aus Firebase Auth holen, sobald Auth integriert ist
+      const userId = 'testuser';
       const workday = {
         date: new Date().toISOString().slice(0, 10),
         sections: cleanSections,
-        userId: 'USER_ID', // TODO: User-ID dynamisch setzen
+        userId,
       };
       this.workdayService.saveWorkday(workday);
     }).unsubscribe();

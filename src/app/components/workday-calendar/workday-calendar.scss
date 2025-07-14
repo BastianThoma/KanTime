@@ -1,0 +1,64 @@
+.workday-calendar-container {
+  padding: 2rem;
+}
+.calendar-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  height: auto;
+}
+.calendar-card {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 2rem 2.5rem;
+  min-width: 280px;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.calendar-date {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1976d2;
+  margin-bottom: 0.5rem;
+}
+.calendar-sections {
+  font-size: 1rem;
+}
+.calendar-sections ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0 0;
+}
+.calendar-sections li {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  margin-bottom: 0.3rem;
+}
+.section-task {
+  color: #1976d2;
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+.section-type {
+  min-width: 80px;
+  text-align: center;
+}
+.section-type.work {
+  color: #1976d2;
+  font-weight: 500;
+}
+.section-type.pause {
+  color: #ffc107;
+  font-weight: 500;
+}
+.section-time {
+  font-family: monospace;
+  background: #f3f6fa;
+  border-radius: 0.4rem;
+  padding: 0.1rem 0.6rem;
+  color: #333;
+}
