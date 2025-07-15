@@ -6,7 +6,7 @@
         <span>{{ formatDate(workday.date) }}</span>
       </div>
       <div class="calendar-sections">
-        <span>{{ workday.sections.length }} Abschnitte</span>
+        <span class="section-count">{{ workday.sections.length }} Abschnitte</span>
         <ul>
           <li *ngFor="let section of workday.sections">
             <span class="section-type" [ngClass]="section.type">

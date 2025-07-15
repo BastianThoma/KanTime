@@ -53,10 +53,12 @@ export class WorkdayTracker {
       return total > 0 ? ((end - start) / total) * 100 : 0;
     });
   }
+  trackerStatus: 'idle' | 'running' | 'paused' | 'stopped' = 'idle';
   private store = inject(Store);
   timeState$ = this.store.select(selectTimeState);
   tasks$ = this.store.select((state: any) => state.task.tasks);
   selectedTaskId: string | null = null;
+  hasPausedOnce: boolean = false;
 
   startWorkday() {
     if (this.selectedTaskId) {
@@ -67,6 +69,7 @@ export class WorkdayTracker {
           taskId: this.selectedTaskId,
         })
       );
+      this.trackerStatus = 'running';
     }
   }
   pauseWorkday() {
@@ -74,6 +77,8 @@ export class WorkdayTracker {
     this.store.dispatch(
       startSection({ start: Date.now(), sectionType: 'pause' })
     );
+    this.trackerStatus = 'paused';
+    this.hasPausedOnce = true;
   }
   resumeWorkday() {
     if (this.selectedTaskId) {
@@ -85,6 +90,7 @@ export class WorkdayTracker {
           taskId: this.selectedTaskId,
         })
       );
+      this.trackerStatus = 'running';
     }
   }
   stopWorkday() {
@@ -131,5 +137,7 @@ export class WorkdayTracker {
         this.workdayService.saveWorkday(workday);
       })
       .unsubscribe();
+    this.trackerStatus = 'stopped';
+    this.hasPausedOnce = false;
   }
 }

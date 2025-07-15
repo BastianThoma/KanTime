@@ -5,10 +5,10 @@
     <select id="task-select" [(ngModel)]="selectedTaskId">
       <option *ngFor="let task of tasks$ | async" [value]="task.id">{{ task.title }}</option>
     </select>
-    <button (click)="startWorkday()" [disabled]="!selectedTaskId">Start</button>
-    <button (click)="pauseWorkday()" [disabled]="!selectedTaskId">Pause</button>
-    <button (click)="resumeWorkday()" [disabled]="!selectedTaskId">Weiter</button>
-    <button (click)="stopWorkday()" [disabled]="!selectedTaskId">Stopp</button>
+    <button (click)="startWorkday()" [disabled]="!selectedTaskId || trackerStatus !== 'idle'">Start</button>
+    <button (click)="pauseWorkday()" [disabled]="trackerStatus !== 'running'">Pause</button>
+    <button (click)="resumeWorkday()" [disabled]="trackerStatus !== 'paused'">Weiter</button>
+    <button (click)="stopWorkday()" [disabled]="!(trackerStatus === 'running' && hasPausedOnce)">Stopp</button>
   </div>
   <div class="workday-chart">
     <ng-container *ngIf="timeState$ | async as state">
@@ -25,7 +25,7 @@
               [style.width.%]="sectionWidths[i]"
               [title]="getTaskTitle(section.taskId) + ' | ' + formatTime(section.start) + ' - ' + formatTime(section.end)"
             >
-              <span class="chart-label">
+              <span class="chart-label" *ngIf="section.end">
                 {{ getTaskTitle(section.taskId) }}<br>
                 {{ formatTime(section.start) }} - {{ formatTime(section.end) }}
               </span>
@@ -37,7 +37,7 @@
               [style.width.%]="sectionWidths[i]"
               [title]="'Pause | ' + formatTime(section.start) + ' - ' + formatTime(section.end)"
             >
-              <span class="chart-label">
+              <span class="chart-label" *ngIf="section.end">
                 Pause<br>
                 {{ formatTime(section.start) }} - {{ formatTime(section.end) }}
               </span>
