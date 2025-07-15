@@ -19,6 +19,34 @@ import { selectWorkdays } from '../../state/workday/workday.selectors';
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
+  async loadYesterdayWorked() {
+    const userId = 'testuser';
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yDate = yesterday.toISOString().slice(0, 10);
+    const workdays = await this.workdayService.getWorkdays(userId);
+    const yesterdayWorkdays = workdays.filter(wd => wd.date === yDate);
+    this.lastWorkdayDate = yesterdayWorkdays.length > 0 ? yesterdayWorkdays[0].date : null;
+    const workSections = yesterdayWorkdays.flatMap(wd => wd.sections.filter(s => s.type === 'work'));
+    this.lastWorkedTime = workSections.reduce(
+      (sum, s) => sum + Math.floor(((s.end ?? Date.now()) - s.start) / 1000),
+      0
+    );
+    this.lastWorkedTaskIds = Array.from(
+      new Set(
+        workSections
+          .map(s => s.taskId)
+          .filter((id): id is string => typeof id === 'string' && !!id)
+      )
+    );
+    // Task-Titel aus Store holen
+    this.store.select(selectAllTasks).subscribe(tasks => {
+      this.lastWorkedTasks = this.lastWorkedTaskIds.map(taskId => {
+        const found = tasks.find(t => t.id === taskId);
+        return found ? found.title : taskId;
+      });
+    });
+  }
   loadTodayWorked = async () => {
     const userId = 'testuser';
     const todayIso = new Date().toISOString().slice(0, 10);
@@ -42,9 +70,12 @@ export class Dashboard {
   };
   todayWorked: number = 0;
   topTasks: Task[] = [];
-  lastWorkday: Workday | null = null;
+  lastWorkdayDate: string | null = null;
   totalWorkedAll: Observable<string>;
   upcomingTasks: Task[] = [];
+  lastWorkedTime: number = 0;
+  lastWorkedTaskIds: string[] = [];
+  lastWorkedTasks: string[] = [];
 
   constructor(private store: Store, private workdayService: WorkdayService) {
     // Daten beim Initialisieren laden
@@ -72,15 +103,16 @@ export class Dashboard {
         .slice(0, 3);
     });
 
-    this.store.select(selectWorkdays).subscribe((workdays) => {
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const yDate = yesterday.toISOString().slice(0, 10);
-      const wds = workdays as Workday[];
-      this.lastWorkday =
-        wds.filter((wd: Workday) => wd.date === yDate)[0] || null;
-      // Arbeitszeit heute bei jeder Änderung neu berechnen
+    this.store.select(selectWorkdays).subscribe(() => {
       this.loadTodayWorked();
+      this.loadYesterdayWorked();
+    });
+    // Task-Titel aus Store holen
+    this.store.select(selectAllTasks).subscribe(tasks => {
+      this.lastWorkedTasks = this.lastWorkedTaskIds.map(taskId => {
+        const found = tasks.find(t => t.id === taskId);
+        return found ? found.title : taskId;
+      });
     });
   }
 

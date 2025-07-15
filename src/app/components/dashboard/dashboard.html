@@ -1,5 +1,3 @@
-
-
 <div class="dashboard-container">
   <h1 class="dashboard-title">👋 Willkommen zum KanTime Dashboard</h1>
   <div class="dashboard-grid">
@@ -25,8 +23,9 @@
     <div class="dashboard-tile">
       <div class="tile-icon">📅</div>
       <div class="tile-label">Letzter Arbeitstag</div>
-      <div class="tile-value">{{ lastWorkday && lastWorkday.date ? (formatDate(lastWorkday.date)) : '-' }}</div>
-      <div class="tile-sub">{{ lastWorkday?.sections?.length || 0 }} Abschnitte</div>
+      <div class="tile-value">{{ lastWorkdayDate ? formatDate(lastWorkdayDate) : '-' }}</div>
+      <div class="tile-sub">{{ lastWorkedTasks.length > 0 ? lastWorkedTasks.join(', ') : 'Keine Tasks' }}</div>
+      <div class="tile-sub">Arbeitszeit: {{ formatTime(lastWorkedTime) }}</div>
       <button routerLink="/workday-calendar" class="tile-btn">Im Kalender</button>
     </div>
 
