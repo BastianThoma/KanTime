@@ -14,7 +14,12 @@
       <div class="tile-icon">�</div>
       <div class="tile-label">Aktive Tasks</div>
       <ul class="tile-list">
-        <li *ngFor="let task of topTasks">{{ task.title }} <span class="tile-task-time">{{ formatTime(task.totalTrackedTime) }}</span></li>
+        <li *ngFor="let task of topTasks">
+          {{ task.title }}
+          <span class="tile-task-time"
+            >{{ formatTime(task.totalTrackedTime) }}</span
+          >
+        </li>
       </ul>
       <button routerLink="/tasks" class="tile-btn">Alle Tasks</button>
     </div>
@@ -23,10 +28,17 @@
     <div class="dashboard-tile">
       <div class="tile-icon">📅</div>
       <div class="tile-label">Letzter Arbeitstag</div>
-      <div class="tile-value">{{ lastWorkdayDate ? formatDate(lastWorkdayDate) : '-' }}</div>
-      <div class="tile-sub">{{ lastWorkedTasks.length > 0 ? lastWorkedTasks.join(', ') : 'Keine Tasks' }}</div>
+      <div class="tile-value">
+        {{ lastWorkdayDate ? formatDate(lastWorkdayDate) : '-' }}
+      </div>
+      <div class="tile-sub">
+        {{ lastWorkedTasks.length > 0 ? lastWorkedTasks.join(', ') : 'Keine
+        Tasks' }}
+      </div>
       <div class="tile-sub">Arbeitszeit: {{ formatTime(lastWorkedTime) }}</div>
-      <button routerLink="/workday-calendar" class="tile-btn">Im Kalender</button>
+      <button routerLink="/workday-calendar" class="tile-btn">
+        Im Kalender
+      </button>
     </div>
 
     <!-- Gesamtstatistik -->
@@ -42,7 +54,12 @@
       <div class="tile-icon">⏳</div>
       <div class="tile-label">Nächste Deadlines</div>
       <ul class="tile-list">
-        <li *ngFor="let task of upcomingTasks">{{ task.title }} <span class="tile-task-date">{{ formatDate(task.deadline ?? '') }}</span></li>
+        <li *ngFor="let task of upcomingTasks">
+          {{ task.title }}
+          <span class="tile-task-date"
+            >{{ formatDate(task.deadline ?? '') }}</span
+          >
+        </li>
       </ul>
       <button routerLink="/tasks" class="tile-btn">Planung</button>
     </div>
@@ -57,4 +74,3 @@
     </div>
   </div>
 </div>
-
