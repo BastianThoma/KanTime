@@ -94,3 +94,18 @@
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
+.workday-tracker-floating {
+  position: fixed;
+  z-index: 1000;
+  min-width: 340px;
+  max-width: 95vw;
+  max-height: 90vh;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+  cursor: grab;
+  transition: box-shadow 0.2s;
+  user-select: none;
+}
+.workday-tracker-floating.dragging {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.28);
+  cursor: grabbing;
+}

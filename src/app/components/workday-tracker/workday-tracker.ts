@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TimeState, TimeSection } from '../../state/time/time.model';
 import { selectTimeState } from '../../state/time/time.selectors';
 import { startSection, endSection, stopWorkDay } from '../../state/time/time.actions';
@@ -9,7 +10,7 @@ import { WorkdayService } from '../../state/workday/workday.service';
 import { loadTasks } from '../../state/task/task.actions';
 @Component({
   selector: 'app-workday-tracker',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DragDropModule],
   templateUrl: './workday-tracker.html',
   styleUrl: './workday-tracker.scss',
 })

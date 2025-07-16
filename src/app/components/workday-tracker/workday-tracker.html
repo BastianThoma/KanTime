@@ -1,4 +1,9 @@
-<div class="workday-tracker-container">
+<div
+  class="workday-tracker-floating workday-tracker-container"
+  cdkDrag
+  cdkDragBoundary="body"
+  cdkDragRootElement=".workday-tracker-floating"
+>
   <h2>Arbeitszeit-Tracker</h2>
   <div class="workday-controls">
     <label for="task-select">Task wählen:</label>
