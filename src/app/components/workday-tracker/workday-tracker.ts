@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { TimeState, TimeSection } from '../../state/time/time.model';
+import { TimeSection } from '../../state/time/time.model';
 import { selectTimeState } from '../../state/time/time.selectors';
 import { startSection, endSection, stopWorkDay } from '../../state/time/time.actions';
 import { WorkdayService } from '../../state/workday/workday.service';

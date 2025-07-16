@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, addDoc, doc, setDoc, getDocs, query, where } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Workday } from './workday.model';
 
 @Injectable({ providedIn: 'root' })

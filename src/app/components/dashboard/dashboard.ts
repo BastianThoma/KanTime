@@ -6,10 +6,8 @@ import { Store } from '@ngrx/store';
 import { WorkdayService } from '../../state/workday/workday.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { selectTotalWorked } from '../../state/time/time.selectors';
 import { selectAllTasks } from '../../state/task/task.selectors';
 import { Task } from '../../state/task/task.model';
-import { Workday } from '../../state/workday/workday.model';
 import { selectWorkdays } from '../../state/workday/workday.selectors';
 
 @Component({
