@@ -1,59 +1,79 @@
-# KanTime
+# 🗂️ KanTime – Dein smarter Arbeitszeit- & Task-Manager
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.2.
+Willkommen zu KanTime! Organisiere deinen Arbeitstag mit einem modernen Kanban-Dashboard, präziser Zeiterfassung und intuitiver Bedienung. Behalte Aufgaben, Arbeitszeiten und Fortschritt immer im Blick – alles in einer stylischen, performanten Web-App.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🚀 Live Demo
 
-```bash
-ng serve
-```
+[Hier geht’s direkt zur Live Demo – entdecke KanTime in Aktion!](https://bastian-thoma.de/projects/kan-time/)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## 🗂️ Inhalt
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **Dashboard** – Kanban-Board für Aufgaben & Status
+- **Workday Tracker** – Schwebendes Widget für Live-Zeiterfassung
+- **Navbar** – Globale Navigation
+- **Statistiken** – Arbeitszeit heute, gestern & Gesamt
+- **Drag & Drop** – Aufgaben flexibel verschieben
+- **Persistenz** – Daten bleiben nach Reload erhalten
+- **Responsive Design** – Optimiert für alle Geräte
 
-```bash
-ng generate component component-name
-```
+---
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🛠️ Technologien
 
-```bash
-ng generate --help
-```
+- **Angular 20 (Standalone Components)**
+- **TypeScript**
+- **NgRx Store & Effects**
+- **Firebase Firestore**
+- **SCSS (modular, responsive)**
+- **Angular CDK DragDrop**
 
-## Building
+---
 
-To build the project run:
+## 📦 Projektstruktur
 
-```bash
-ng build
-```
+- `src/app/` – Haupt-App, Komponenten, State-Management
+- `src/app/components/` – Dashboard, Taskboard, Workday Tracker
+- `src/app/state/` – NgRx Store, Actions, Reducer, Selectors
+- `src/assets/` – Bilder, Icons
+- `src/environments/` – Umgebungsvariablen
+- `public/` – Favicon & statische Dateien
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+## ⚡ Installation & Start
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+1. Repository klonen
+2. `npm install` ausführen
+3. `npm start` für lokalen Dev-Server
+4. Im Browser öffnen: [http://localhost:4200](http://localhost:4200)
 
-```bash
-ng test
-```
+---
 
-## Running end-to-end tests
+## 🌱 Weiterentwicklung
 
-For end-to-end (e2e) testing, run:
+- Team-Features & Kollaboration
+- Erweiterte Statistiken & Filter
+- Aufgaben-Vorlagen & wiederkehrende Tasks
+- Export als PDF/CSV für Berichte
 
-```bash
-ng e2e
-```
+---
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## ❤️ Lizenz
 
-## Additional Resources
+Dieses Projekt ist lizenziert unter der MIT License – siehe [LICENSE](LICENSE).
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+
+## 📞 Kontakt
+
+- **GitHub**: [@BastianThoma](https://github.com/BastianThoma)
+- **E-Mail**: [contact@bastian-thoma.de](mailto:contact@bastian-thoma.de)
+- **LinkedIn**: [Bastian Jerome Thoma](https://www.linkedin.com/in/bastian-thoma/)
+
+---
+
+*Viel Spaß beim Organisieren & Tracken – und danke fürs Ausprobieren!* 🥳
