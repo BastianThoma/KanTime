@@ -6,7 +6,7 @@ Willkommen zu KanTime! Organisiere deinen Arbeitstag mit einem modernen Kanban-D
 
 ## 🚀 Live Demo
 
-[Hier geht’s direkt zur Live Demo – entdecke KanTime in Aktion!](https://bastian-thoma.de/projects/kan-time/)
+Demnächst verfügbar! ;)
 
 ---
 
