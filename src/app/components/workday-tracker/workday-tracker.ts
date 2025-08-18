@@ -6,6 +6,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TimeSection } from '../../state/time/time.model';
 import { selectTimeState } from '../../state/time/time.selectors';
 import { startSection, endSection, stopWorkDay } from '../../state/time/time.actions';
+import { combineLatest, firstValueFrom } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { WorkdayService } from '../../state/workday/workday.service';
 import { loadTasks } from '../../state/task/task.actions';
 @Component({
@@ -94,50 +96,50 @@ export class WorkdayTracker {
       this.trackerStatus = 'running';
     }
   }
-  stopWorkday() {
+  async stopWorkday() {
     this.store.dispatch(endSection({ end: Date.now() }));
-    // Workday speichern
-    this.timeState$
-      .subscribe((state) => {
-        let tasks: any[] = [];
-        this.tasks$.subscribe((t) => (tasks = t)).unsubscribe();
-        const cleanSections = state.sections.map((section) => {
-          const s: any = { ...section };
-          if (s.taskId === undefined) delete s.taskId;
-          if (s.taskId) {
-            const found = tasks.find((task) => task.id === s.taskId);
-            s.taskTitle = found ? found.title : s.taskId;
-          }
-          return s;
-        });
+    // Workday speichern, aber garantiert nur einmal!
+    const [state, tasks] = await firstValueFrom(
+      combineLatest([
+        this.timeState$.pipe(take(1)),
+        this.tasks$.pipe(take(1))
+      ])
+    );
+    const cleanSections = state.sections.map((section: any) => {
+      const s: any = { ...section };
+      if (s.taskId === undefined) delete s.taskId;
+      if (s.taskId) {
+        const found = tasks.find((task: any) => task.id === s.taskId);
+        s.taskTitle = found ? found.title : s.taskId;
+      }
+      return s;
+    });
 
-        // TrackedTime für Tasks berechnen und updaten
-        const trackedTimeMap: { [id: string]: number } = {};
-        cleanSections.forEach((section) => {
-          if (section.type === 'work' && section.taskId) {
-            const duration =
-              section.end && section.start
-                ? Math.round((section.end - section.start) / 1000)
-                : 0;
-            trackedTimeMap[section.taskId] =
-              (trackedTimeMap[section.taskId] || 0) + duration;
-          }
-        });
-        Object.entries(trackedTimeMap).forEach(([id, totalTrackedTime]) => {
-          this.store.dispatch(
-            stopWorkDay({ totalWorked: totalTrackedTime * 1000, taskId: id })
-          );
-        });
-        // TODO: User-ID aus Firebase Auth holen, sobald Auth integriert ist
-        const userId = 'testuser';
-        const workday = {
-          date: new Date().toISOString().slice(0, 10),
-          sections: cleanSections,
-          userId,
-        };
-        this.workdayService.saveWorkday(workday);
-      })
-      .unsubscribe();
+    // TrackedTime für Tasks berechnen und updaten
+    const trackedTimeMap: { [id: string]: number } = {};
+    cleanSections.forEach((section: any) => {
+      if (section.type === 'work' && section.taskId) {
+        const duration =
+          section.end && section.start
+            ? Math.round((section.end - section.start) / 1000)
+            : 0;
+        trackedTimeMap[section.taskId] =
+          (trackedTimeMap[section.taskId] || 0) + duration;
+      }
+    });
+    Object.entries(trackedTimeMap).forEach(([id, totalTrackedTime]) => {
+      this.store.dispatch(
+        stopWorkDay({ totalWorked: totalTrackedTime * 1000, taskId: id })
+      );
+    });
+    // TODO: User-ID aus Firebase Auth holen, sobald Auth integriert ist
+    const userId = 'testuser';
+    const workday = {
+      date: new Date().toISOString().slice(0, 10),
+      sections: cleanSections,
+      userId,
+    };
+    this.workdayService.saveWorkday(workday);
     this.trackerStatus = 'stopped';
     this.hasPausedOnce = false;
   }
