@@ -63,6 +63,36 @@ export class WorkdayTracker {
   selectedTaskId: string | null = null;
   hasPausedOnce: boolean = false;
 
+  // Custom Dropdown Properties
+  dropdownOpen: boolean = false;
+  selectedTaskTitle: string = '';
+
+  // Custom Dropdown Methods
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  selectTask(taskId: string, taskTitle: string) {
+    this.selectedTaskId = taskId;
+    this.selectedTaskTitle = taskTitle;
+    this.dropdownOpen = false;
+  }
+
+  getSelectedTaskTitle(): string {
+    if (this.selectedTaskTitle) {
+      return this.selectedTaskTitle;
+    }
+    // Fallback: get title from tasks observable
+    if (this.selectedTaskId) {
+      return this.getTaskTitle(this.selectedTaskId);
+    }
+    return '';
+  }
+
+  trackByTaskId(index: number, task: any): string {
+    return task.id;
+  }
+
   startWorkday() {
     if (this.selectedTaskId) {
       this.store.dispatch(

@@ -6,20 +6,76 @@
 >
   <h2>Arbeitszeit-Tracker</h2>
   <div class="workday-controls">
-    <label for="task-select">Task wählen:</label>
-    <select id="task-select" [(ngModel)]="selectedTaskId">
-      <option *ngFor="let task of tasks$ | async" [value]="task.id">{{ task.title }}</option>
-    </select>
-    <button (click)="startWorkday()" [disabled]="!selectedTaskId || trackerStatus !== 'idle'">Start</button>
-    <button (click)="pauseWorkday()" [disabled]="trackerStatus !== 'running'">Pause</button>
-    <button (click)="resumeWorkday()" [disabled]="trackerStatus !== 'paused'">Weiter</button>
-    <button (click)="stopWorkday()" [disabled]="!(trackerStatus === 'running' && hasPausedOnce)">Stopp</button>
+    <!-- Task Selection Section -->
+    <div class="task-selection">
+      <label for="task-dropdown">Task wählen:</label>
+      <div class="dropdown-container" [class.open]="dropdownOpen">
+        <div
+          class="dropdown-trigger"
+          (click)="toggleDropdown()"
+          [class.open]="dropdownOpen"
+        >
+          <span class="selected-value">
+            {{ getSelectedTaskTitle() || 'Task auswählen...' }}
+          </span>
+        </div>
+
+        <div class="dropdown-menu" *ngIf="dropdownOpen">
+          <div
+            class="dropdown-item"
+            *ngFor="let task of tasks$ | async; trackBy: trackByTaskId"
+            [class.selected]="task.id === selectedTaskId"
+            (click)="selectTask(task.id, task.title)"
+          >
+            <span class="task-title">{{ task.title }}</span>
+            <span class="task-status" [class]="'status-' + task.status"
+              >{{ task.status }}</span
+            >
+          </div>
+
+          <div
+            class="dropdown-item no-tasks"
+            *ngIf="(tasks$ | async)?.length === 0"
+          >
+            <span class="task-title">Keine Tasks verfügbar</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Button Group -->
+    <div class="button-group">
+      <button
+        (click)="startWorkday()"
+        [disabled]="!selectedTaskId || trackerStatus !== 'idle'"
+      >
+        Start
+      </button>
+      <button (click)="pauseWorkday()" [disabled]="trackerStatus !== 'running'">
+        Pause
+      </button>
+      <button (click)="resumeWorkday()" [disabled]="trackerStatus !== 'paused'">
+        Weiter
+      </button>
+      <button
+        (click)="stopWorkday()"
+        [disabled]="!(trackerStatus === 'running' && hasPausedOnce)"
+      >
+        Stopp
+      </button>
+    </div>
   </div>
   <div class="workday-chart">
     <ng-container *ngIf="timeState$ | async as state">
       <div class="active-task">
-        <span *ngIf="state.sections.length > 0 && state.sections[state.sections.length-1].type === 'work'">
-          Aktive Task: <strong>{{ getTaskTitle(state.sections[state.sections.length-1].taskId) }}</strong>
+        <span
+          *ngIf="state.sections.length > 0 && state.sections[state.sections.length-1].type === 'work'"
+        >
+          Aktive Task:
+          <strong
+            >{{ getTaskTitle(state.sections[state.sections.length-1].taskId)
+            }}</strong
+          >
         </span>
       </div>
       <div class="chart-bar">
@@ -31,7 +87,7 @@
               [title]="getTaskTitle(section.taskId) + ' | ' + formatTime(section.start) + ' - ' + formatTime(section.end)"
             >
               <span class="chart-label" *ngIf="section.end">
-                {{ getTaskTitle(section.taskId) }}<br>
+                {{ getTaskTitle(section.taskId) }}<br />
                 {{ formatTime(section.start) }} - {{ formatTime(section.end) }}
               </span>
             </div>
@@ -43,7 +99,7 @@
               [title]="'Pause | ' + formatTime(section.start) + ' - ' + formatTime(section.end)"
             >
               <span class="chart-label" *ngIf="section.end">
-                Pause<br>
+                Pause<br />
                 {{ formatTime(section.start) }} - {{ formatTime(section.end) }}
               </span>
             </div>

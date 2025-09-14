@@ -32,8 +32,7 @@
         {{ lastWorkdayDate ? formatDate(lastWorkdayDate) : '-' }}
       </div>
       <div class="tile-sub">
-        {{ lastWorkedTasks.length > 0 ? lastWorkedTasks.join(', ') : 'Keine
-        Tasks' }}
+        {{ lastWorkedTasks.length > 0 ? lastWorkedTasks.join(', ') : 'Keine Tasks' }}
       </div>
       <div class="tile-sub">Arbeitszeit: {{ formatTime(lastWorkedTime) }}</div>
       <button routerLink="/workday-calendar" class="tile-btn">
