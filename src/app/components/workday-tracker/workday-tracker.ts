@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,15 +10,16 @@ import { combineLatest, firstValueFrom } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { WorkdayService } from '../../state/workday/workday.service';
 import { loadTasks } from '../../state/task/task.actions';
-import { OnDestroy } from '@angular/core';
+import { saveWorkday, loadWorkdays } from '../../state/workday/workday.actions';
 @Component({
   selector: 'app-workday-tracker',
   imports: [CommonModule, FormsModule, DragDropModule],
   templateUrl: './workday-tracker.html',
   styleUrl: './workday-tracker.scss',
 })
-export class WorkdayTracker implements OnDestroy {
+export class WorkdayTracker implements OnInit, OnDestroy {
   private workdayService = inject(WorkdayService);
+  private cdr = inject(ChangeDetectorRef);
   ngOnInit() {
     this.store.dispatch(loadTasks());
     this.timeState$.subscribe((state) => {
@@ -32,12 +33,17 @@ export class WorkdayTracker implements OnDestroy {
 
   // Live Timer Methods
   private startTimer(): void {
+    // Vorherigen Timer stoppen falls vorhanden
+    this.stopTimer();
+    
     this.sessionStartTime = Date.now();
     this.currentSessionTime = 0;
     
     this.timerInterval = window.setInterval(() => {
       if (this.sessionStartTime) {
         this.currentSessionTime = Math.floor((Date.now() - this.sessionStartTime) / 1000);
+        // Change Detection manuell triggern
+        this.cdr.detectChanges();
       }
     }, 1000);
   }
@@ -56,11 +62,8 @@ export class WorkdayTracker implements OnDestroy {
     const minutes = Math.floor((this.currentSessionTime % 3600) / 60);
     const seconds = this.currentSessionTime % 60;
     
-    if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    } else {
-      return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    }
+    // Immer Stunden:Minuten:Sekunden Format
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }
   getTaskTitle(taskId: string | undefined): string {
     let title = '';
@@ -210,6 +213,10 @@ export class WorkdayTracker implements OnDestroy {
         stopWorkDay({ totalWorked: totalTrackedTime * 1000, taskId: id })
       );
     });
+    
+    // Tasks neu laden damit die totalTrackedTime aktualisiert wird
+    this.store.dispatch(loadTasks());
+    
     // TODO: User-ID aus Firebase Auth holen, sobald Auth integriert ist
     const userId = 'testuser';
     const workday = {
@@ -217,7 +224,14 @@ export class WorkdayTracker implements OnDestroy {
       sections: cleanSections,
       userId,
     };
+    
+    // Workday sowohl im Service als auch im Store speichern
     this.workdayService.saveWorkday(workday);
+    this.store.dispatch(saveWorkday({ workday }));
+    
+    // Store neu laden damit Dashboard sich aktualisiert
+    this.store.dispatch(loadWorkdays());
+    
     this.trackerStatus = 'stopped';
     this.hasPausedOnce = false;
     this.stopTimer(); // Timer stoppen und resetten

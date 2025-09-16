@@ -83,6 +83,10 @@ export class Dashboard implements OnInit, OnDestroy {
         // Produktivitätsdaten neu berechnen wenn sich Tasks ändern
         this.updateProductivityCache();
         
+        // Auch Workday-Daten neu laden, da sich durch Task-Updates die Zeiten ändern können
+        this.loadTodayWorked();
+        this.loadWeeklyData();
+        
         // Change Detection triggern nach Task-Updates
         this.cdr.detectChanges();
         
