@@ -1,28 +1,44 @@
 <div class="workday-calendar-container">
   <h2>Arbeitszeit-Kalender</h2>
-  <div class="calendar-list">
+  
+  <div class="calendar-list" *ngIf="workdays.length > 0">
     <div class="calendar-card" *ngFor="let workday of workdays">
-      <div class="calendar-date">
-        <span>{{ formatDate(workday.date) }}</span>
+      <div class="calendar-header">
+        <div class="calendar-date">{{ formatDate(workday.date) }}</div>
+        <div class="calendar-stats">
+          <span class="stat-item">{{ calculateWorkTime(workday.sections) }}</span>
+          <span class="stat-divider">•</span>
+          <span class="stat-item">{{ workday.sections.length }} Abschnitte</span>
+        </div>
       </div>
-      <div class="calendar-sections">
-        <span class="section-count">{{ workday.sections.length }} Abschnitte</span>
-        <ul>
-          <li *ngFor="let section of workday.sections">
-            <span class="section-type" [ngClass]="section.type">
-              {{ section.type === 'work' ? '🟦 Arbeit' : '🟨 Pause' }}
-            </span>
-            <span class="section-time">
-              {{ toDate(section.start) | date:'HH:mm':'':'de-DE' }}
-              -
-              {{ toDate(section.end) | date:'HH:mm':'':'de-DE' }}
-            </span>
-            <span *ngIf="section.taskId" class="section-task">
-              Task: <strong>{{ section.taskTitle || getTaskTitle(section.taskId) }}</strong>
-            </span>
-          </li>
-        </ul>
+      
+      <div class="calendar-timeline">
+        <div class="timeline-item" 
+             *ngFor="let section of workday.sections" 
+             [class.work-item]="section.type === 'work'"
+             [class.pause-item]="section.type === 'pause'">
+          <div class="timeline-badge" [class]="section.type">
+            <span>{{ section.type === 'work' ? '💼' : '☕' }}</span>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-time">
+              {{ toDate(section.start) | date:'HH:mm' }} - {{ toDate(section.end) | date:'HH:mm' }}
+              <span class="duration">({{ formatDuration(section.start, section.end) }})</span>
+            </div>
+            <div *ngIf="section.taskId" class="timeline-task">
+              {{ getTaskTitle(section.taskId) }}
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <div class="empty-calendar" *ngIf="workdays.length === 0">
+    <div class="empty-icon">📅</div>
+    <div class="empty-title">Keine Arbeitstage gefunden</div>
+    <div class="empty-subtitle">
+      Starte den Workday-Tracker, um deine ersten Arbeitsstunden zu erfassen!
     </div>
   </div>
 </div>

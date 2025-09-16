@@ -314,7 +314,9 @@
 }
 .workday-tracker-floating {
   position: fixed;
-  z-index: 1000;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
   min-width: 360px;
   max-width: 95vw;
   max-height: 90vh;
