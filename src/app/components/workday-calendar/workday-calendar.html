@@ -10,9 +10,24 @@
           <span class="stat-divider">•</span>
           <span class="stat-item">{{ workday.sections.length }} Abschnitte</span>
         </div>
+        <div class="calendar-actions">
+          <button 
+            class="btn-edit" 
+            (click)="startEditing(workday)"
+            *ngIf="editingWorkdayId !== workday.date">
+            ✏️ Bearbeiten
+          </button>
+          <button 
+            class="btn-delete" 
+            (click)="deleteWorkday(workday)"
+            *ngIf="editingWorkdayId !== workday.date">
+            🗑️ Löschen
+          </button>
+        </div>
       </div>
       
-      <div class="calendar-timeline">
+      <!-- NORMAL VIEW: Timeline -->
+      <div class="calendar-timeline" *ngIf="editingWorkdayId !== workday.date">
         <div class="timeline-item" 
              *ngFor="let section of workday.sections" 
              [class.work-item]="section.type === 'work'"
@@ -29,6 +44,66 @@
               {{ getTaskTitle(section.taskId) }}
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- EDIT VIEW: Bearbeitungsformular -->
+      <div class="calendar-edit-form" *ngIf="editingWorkdayId === workday.date && editWorkday">
+        <div class="edit-header">
+          <h3>Arbeitstag bearbeiten</h3>
+          <div class="edit-actions">
+            <button class="btn-save" (click)="saveWorkday()">💾 Speichern</button>
+            <button class="btn-cancel" (click)="cancelEditing()">❌ Abbrechen</button>
+          </div>
+        </div>
+
+        <div class="sections-edit">
+          <div class="section-edit" *ngFor="let section of editWorkday.sections; let i = index">
+            <div class="section-header">
+              <span class="section-number">Section {{ i + 1 }}</span>
+              <button class="btn-delete-section" (click)="deleteSection(i)">🗑️</button>
+            </div>
+            
+            <div class="section-form">
+              <div class="form-row">
+                <label>Typ:</label>
+                <select [(ngModel)]="section.type">
+                  <option value="work">💼 Arbeit</option>
+                  <option value="pause">☕ Pause</option>
+                </select>
+              </div>
+
+              <div class="form-row">
+                <label>Start:</label>
+                <input 
+                  type="datetime-local" 
+                  [value]="formatForInput(section.start)"
+                  (change)="onStartTimeChange(section, $event)">
+              </div>
+
+              <div class="form-row">
+                <label>Ende:</label>
+                <input 
+                  type="datetime-local" 
+                  [value]="formatForInput(section.end)"
+                  (change)="onEndTimeChange(section, $event)">
+              </div>
+
+              <div class="form-row" *ngIf="section.type === 'work'">
+                <label>Task:</label>
+                <select [(ngModel)]="section.taskId">
+                  <option value="">Keine Task</option>
+                  <option *ngFor="let task of tasks$ | async" [value]="task.id">
+                    {{ task.title }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-add-section" (click)="addSection()">
+            ➕ Section hinzufügen
+          </button>
         </div>
       </div>
     </div>

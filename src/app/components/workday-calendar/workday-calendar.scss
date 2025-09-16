@@ -18,6 +18,49 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+
+  // Medium Screen Optimierungen (769px - 928px)
+  @media (min-width: 769px) and (max-width: 928px) {
+    max-width: 900px;
+    padding: 1.25rem;
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1.75rem;
+    }
+  }
+
+  // Large Screen Optimierungen (929px+)
+  @media (min-width: 929px) {
+    max-width: 1400px;
+    padding: 2rem;
+
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+  }
+
+  // Mobile Anpassungen
+  @media (max-width: 768px) {
+    padding: 1rem;
+    margin: 1rem;
+
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    margin: 0.5rem;
+    padding: 0.75rem;
+
+    h2 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+    }
+  }
 }
 
 .calendar-list {
@@ -25,6 +68,25 @@
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
   width: 100%;
+
+  @media (min-width: 769px) and (max-width: 928px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 929px) {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 480px) {
+    gap: 0.5rem;
+  }
 }
 
 .calendar-card {
@@ -39,6 +101,8 @@
   position: relative;
   border: 1px solid #2a2a2a;
   overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 
   &:hover {
     transform: translateY(-2px);
@@ -63,6 +127,8 @@
   align-items: center;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid #333;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .calendar-date {
@@ -306,5 +372,349 @@
 
   .section-time {
     text-align: center;
+  }
+}
+
+// ================== EDIT STYLES ==================
+
+.calendar-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+  flex-wrap: wrap;
+
+  .btn-edit, .btn-delete {
+    padding: 0.4rem 0.8rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .btn-edit {
+    background: linear-gradient(135deg, #00bb95, #00a085);
+    color: white;
+
+    &:hover {
+      background: linear-gradient(135deg, #00d4aa, #00bb95);
+      transform: translateY(-1px);
+    }
+  }
+
+  .btn-delete {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+
+    &:hover {
+      background: linear-gradient(135deg, #f56565, #e74c3c);
+      transform: translateY(-1px);
+    }
+  }
+
+  // Medium Screen Optimierungen (769px - 928px)
+  @media (min-width: 769px) and (max-width: 928px) {
+    .btn-edit, .btn-delete {
+      padding: 0.35rem 0.7rem;
+      font-size: 0.8rem;
+    }
+  }
+
+  // Large Screen Optimierungen (929px+)
+  @media (min-width: 929px) {
+    .btn-edit, .btn-delete {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .btn-edit, .btn-delete {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.calendar-edit-form {
+  background: rgba(42, 42, 42, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid rgba(0, 187, 149, 0.3);
+  overflow: hidden; // Verhindert Overflow
+
+  .edit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #333;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    h3 {
+      color: #00bb95;
+      margin: 0;
+      font-size: 1.2rem;
+      min-width: 0; // Erlaubt Text-Wrapping
+    }
+
+    // Medium Screen Optimierungen (769px - 928px)
+    @media (min-width: 769px) and (max-width: 928px) {
+      h3 {
+        font-size: 1.1rem;
+      }
+    }
+
+    // Large Screen Optimierungen (929px+)
+    @media (min-width: 929px) {
+      h3 {
+        font-size: 1.3rem;
+      }
+    }
+
+    .edit-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+
+      .btn-save, .btn-cancel {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+        min-width: 80px;
+      }
+
+      .btn-save {
+        background: linear-gradient(135deg, #00bb95, #00a085);
+        color: white;
+
+        &:hover {
+          background: linear-gradient(135deg, #00d4aa, #00bb95);
+        }
+      }
+
+      .btn-cancel {
+        background: linear-gradient(135deg, #6c757d, #5a6268);
+        color: white;
+
+        &:hover {
+          background: linear-gradient(135deg, #7c868d, #6c757d);
+        }
+      }
+
+      // Medium Screen Optimierungen (769px - 928px)
+      @media (min-width: 769px) and (max-width: 928px) {
+        .btn-save, .btn-cancel {
+          padding: 0.45rem 0.9rem;
+          font-size: 0.85rem;
+          min-width: 75px;
+        }
+      }
+
+      // Large Screen Optimierungen (929px+)
+      @media (min-width: 929px) {
+        .btn-save, .btn-cancel {
+          padding: 0.6rem 1.2rem;
+          font-size: 1rem;
+          min-width: 90px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .btn-save, .btn-cancel {
+          padding: 0.6rem 0.8rem;
+          font-size: 0.85rem;
+          min-width: 70px;
+        }
+      }
+    }
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+      align-items: stretch;
+
+      h3 {
+        font-size: 1.1rem;
+        text-align: center;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 0.75rem;
+  }
+
+}
+
+.sections-edit {
+  .section-edit {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid #333;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      .section-number {
+        font-weight: 600;
+        color: #00bb95;
+        font-size: 1rem;
+      }
+
+      .btn-delete-section {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+
+        &:hover {
+          background: #f56565;
+          transform: scale(1.05);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .section-number {
+          font-size: 0.9rem;
+        }
+
+        .btn-delete-section {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.75rem;
+        }
+      }
+    }
+
+    .section-form {
+      display: grid;
+      gap: 0.75rem;
+
+      .form-row {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+          font-weight: 500;
+          color: #b0b0b0;
+          font-size: 0.9rem;
+          align-self: flex-start;
+        }
+
+        select, input {
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          box-sizing: border-box;
+          padding: 0.5rem;
+          background: #1a1a1a;
+          border: 1px solid #333;
+          border-radius: 6px;
+          color: #e0e0e0;
+          font-size: 0.9rem;
+          transition: all 0.2s ease;
+
+          &:focus {
+            outline: none;
+            border-color: #00bb95;
+            box-shadow: 0 0 0 2px rgba(0, 187, 149, 0.2);
+          }
+        }
+
+        select {
+          cursor: pointer;
+        }
+
+        // Medium Screen Optimierungen (769px - 928px)
+        @media (min-width: 769px) and (max-width: 928px) {
+          gap: 0.4rem;
+
+          label {
+            font-size: 0.85rem;
+          }
+
+          select, input {
+            padding: 0.45rem;
+            font-size: 0.85rem;
+          }
+        }
+
+        // Large Screen Optimierungen (929px+)
+        @media (min-width: 929px) {
+          gap: 0.6rem;
+
+          label {
+            font-size: 1rem;
+          }
+
+          select, input {
+            padding: 0.6rem;
+            font-size: 1rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          gap: 0.4rem;
+
+          label {
+            font-size: 0.8rem;
+          }
+
+          select, input {
+            padding: 0.5rem;
+            font-size: 0.8rem;
+          }
+        }
+      }
+    }
+  }
+
+  .btn-add-section {
+    width: 100%;
+    padding: 0.75rem;
+    background: linear-gradient(135deg, #00bb95, #00a085);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+
+    &:hover {
+      background: linear-gradient(135deg, #00d4aa, #00bb95);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(0, 187, 149, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
   }
 }

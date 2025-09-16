@@ -14,3 +14,7 @@ export const loadWorkdaysFailure = createAction('[Workday] Load Workdays Failure
 export const saveWorkday = createAction('[Workday] Save Workday', props<{ workday: Workday }>());
 export const saveWorkdaySuccess = createAction('[Workday] Save Workday Success', props<{ workday: Workday }>());
 export const saveWorkdayFailure = createAction('[Workday] Save Workday Failure', props<{ error: any }>());
+
+export const deleteWorkday = createAction('[Workday] Delete Workday', props<{ workdayId: string }>());
+export const deleteWorkdaySuccess = createAction('[Workday] Delete Workday Success', props<{ workdayId: string }>());
+export const deleteWorkdayFailure = createAction('[Workday] Delete Workday Failure', props<{ error: any }>());

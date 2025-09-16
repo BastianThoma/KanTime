@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, doc, setDoc, getDocs, query, where } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, doc, setDoc, getDocs, deleteDoc, query, where } from '@angular/fire/firestore';
 import { Workday } from './workday.model';
 
 @Injectable({ providedIn: 'root' })
@@ -21,5 +21,10 @@ export class WorkdayService {
     } else {
       await addDoc(workdaysRef, workday);
     }
+  }
+
+  async deleteWorkday(workdayId: string): Promise<void> {
+    const workdayDoc = doc(this.firestore, 'workdays', workdayId);
+    await deleteDoc(workdayDoc);
   }
 }
