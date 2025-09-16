@@ -60,6 +60,71 @@
     margin-bottom: 1.5rem;
     text-align: center;
   }
+
+  // Live Timer Styles
+  .live-timer {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: rgba(42, 42, 42, 0.3);
+    border-radius: 8px;
+    border: 1px solid rgba(42, 42, 42, 0.5);
+    opacity: 0.5;
+    transition: all 0.3s ease;
+
+    &.active {
+      opacity: 1;
+      background: rgba(0, 187, 149, 0.1);
+      border-color: rgba(0, 187, 149, 0.3);
+      box-shadow: 0 0 10px rgba(0, 187, 149, 0.2);
+    }
+
+    .timer-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+
+      .timer-label {
+        font-size: 0.8rem;
+        color: #b0b0b0;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .timer-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        font-family: 'Courier New', monospace;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      &.timer-running .timer-value {
+        color: #00bb95;
+        animation: pulse 2s infinite;
+      }
+
+      &.timer-paused .timer-value {
+        color: #ffa502;
+        animation: blink 1s infinite;
+      }
+
+      &.timer-idle .timer-value,
+      &.timer-stopped .timer-value {
+        color: #b0b0b0;
+      }
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.5; }
+  }
 }
 .workday-controls {
   display: grid;

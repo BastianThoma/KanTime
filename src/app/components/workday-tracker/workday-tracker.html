@@ -5,6 +5,19 @@
   cdkDragRootElement=".workday-tracker-floating"
 >
   <h2>Arbeitszeit-Tracker</h2>
+  
+  <!-- Live Timer Display -->
+  <div class="live-timer" [class.active]="trackerStatus === 'running' || trackerStatus === 'paused'">
+    <div class="timer-display" [class]="'timer-' + trackerStatus">
+      <span class="timer-label">
+        {{ trackerStatus === 'running' ? '🟢 Arbeitszeit:' : 
+           trackerStatus === 'paused' ? '⏸️ Pausenzeit:' : 
+           '⏱️ Timer:' }}
+      </span>
+      <span class="timer-value">{{ formatSessionTime() }}</span>
+    </div>
+  </div>
+
   <div class="workday-controls">
     <!-- Task Selection Section -->
     <div class="task-selection">

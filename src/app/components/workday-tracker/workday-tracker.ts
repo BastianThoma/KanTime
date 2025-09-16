@@ -10,19 +10,57 @@ import { combineLatest, firstValueFrom } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { WorkdayService } from '../../state/workday/workday.service';
 import { loadTasks } from '../../state/task/task.actions';
+import { OnDestroy } from '@angular/core';
 @Component({
   selector: 'app-workday-tracker',
   imports: [CommonModule, FormsModule, DragDropModule],
   templateUrl: './workday-tracker.html',
   styleUrl: './workday-tracker.scss',
 })
-export class WorkdayTracker {
+export class WorkdayTracker implements OnDestroy {
   private workdayService = inject(WorkdayService);
   ngOnInit() {
     this.store.dispatch(loadTasks());
     this.timeState$.subscribe((state) => {
       this.updateSectionWidths(state.sections);
     });
+  }
+
+  ngOnDestroy() {
+    this.stopTimer();
+  }
+
+  // Live Timer Methods
+  private startTimer(): void {
+    this.sessionStartTime = Date.now();
+    this.currentSessionTime = 0;
+    
+    this.timerInterval = window.setInterval(() => {
+      if (this.sessionStartTime) {
+        this.currentSessionTime = Math.floor((Date.now() - this.sessionStartTime) / 1000);
+      }
+    }, 1000);
+  }
+
+  private stopTimer(): void {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = undefined;
+    }
+    this.currentSessionTime = 0;
+    this.sessionStartTime = undefined;
+  }
+
+  formatSessionTime(): string {
+    const hours = Math.floor(this.currentSessionTime / 3600);
+    const minutes = Math.floor((this.currentSessionTime % 3600) / 60);
+    const seconds = this.currentSessionTime % 60;
+    
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    } else {
+      return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
   }
   getTaskTitle(taskId: string | undefined): string {
     let title = '';
@@ -62,6 +100,11 @@ export class WorkdayTracker {
   tasks$ = this.store.select((state: any) => state.task.tasks);
   selectedTaskId: string | null = null;
   hasPausedOnce: boolean = false;
+
+  // Live Timer Properties
+  currentSessionTime: number = 0; // in seconds
+  private timerInterval?: number;
+  private sessionStartTime?: number;
 
   // Custom Dropdown Properties
   dropdownOpen: boolean = false;
@@ -103,8 +146,10 @@ export class WorkdayTracker {
         })
       );
       this.trackerStatus = 'running';
+      this.startTimer(); // Timer starten
     }
   }
+
   pauseWorkday() {
     this.store.dispatch(endSection({ end: Date.now() }));
     this.store.dispatch(
@@ -112,7 +157,9 @@ export class WorkdayTracker {
     );
     this.trackerStatus = 'paused';
     this.hasPausedOnce = true;
+    this.startTimer(); // Timer für Pause neu starten
   }
+
   resumeWorkday() {
     if (this.selectedTaskId) {
       this.store.dispatch(endSection({ end: Date.now() }));
@@ -124,6 +171,7 @@ export class WorkdayTracker {
         })
       );
       this.trackerStatus = 'running';
+      this.startTimer(); // Timer für Arbeit neu starten
     }
   }
   async stopWorkday() {
@@ -172,5 +220,6 @@ export class WorkdayTracker {
     this.workdayService.saveWorkday(workday);
     this.trackerStatus = 'stopped';
     this.hasPausedOnce = false;
+    this.stopTimer(); // Timer stoppen und resetten
   }
 }

@@ -1,3 +1,5 @@
+@import '../../app.scss';
+
 .dashboard-container {
   max-width: 1200px;
   margin: 2rem auto;
@@ -6,6 +8,7 @@
   border-radius: 1rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   border: 1px solid #2a2a2a;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .dashboard-title {
@@ -22,102 +25,346 @@
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 1.5rem;
-}
-
-// Mobile responsive adjustments
-@media (max-width: 768px) {
-  .dashboard-container {
-    margin: 1rem;
-    padding: 1rem;
-  }
-  
-  .dashboard-title {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .dashboard-tile {
   background: linear-gradient(145deg, #252525, #1e1e1e);
   border-radius: 1rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 1.75rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  padding: 1.5rem;
+  color: white;
   transition: all 0.3s ease;
   position: relative;
+  overflow: hidden;
   border: 1px solid #2a2a2a;
-  
+
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
     border-color: #00bb95;
   }
-}
 
-.tile-icon {
-  font-size: 2.5rem;
-  margin-bottom: 0.75rem;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-.tile-label {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: #e0e0e0;
-  letter-spacing: 0.5px;
-}
-
-.tile-value {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #00bb95;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.tile-sub {
-  font-size: 0.95rem;
-  color: #b0b0b0;
-  margin-bottom: 0.5rem;
-  line-height: 1.4;
-}
-
-.tile-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1rem 0;
-  width: 100%;
-  
-  li {
-    font-size: 0.95rem;
-    margin-bottom: 0.5rem;
-    color: #b0b0b0;
-    padding: 0.25rem 0;
-    border-bottom: 1px solid rgba(42, 42, 42, 0.5);
+  &.dashboard-tile-wide {
+    grid-column: span 2;
     
-    &:last-child {
-      border-bottom: none;
+    @media (max-width: 768px) {
+      grid-column: span 1;
+    }
+  }
+
+  &.dashboard-urgent {
+    background: linear-gradient(145deg, #3d2525, #2e1e1e);
+    border-color: rgba(255, 107, 107, 0.4);
+    
+    &:hover {
+      border-color: #ff6b6b;
+    }
+  }
+
+  &.dashboard-shortcuts {
+    background: linear-gradient(145deg, #1f2a2a, #1a2525);
+    border-color: rgba(0, 187, 149, 0.4);
+    
+    &:hover {
+      border-color: #00bb95;
     }
   }
 }
 
-.tile-task-time,
-.tile-task-date {
-  font-size: 0.85rem;
-  color: #00bb95;
-  margin-left: 0.5rem;
-  font-weight: 500;
+.tile-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  display: block;
 }
+
+.tile-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tile-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #00bb95;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.tile-progress {
+  margin: 1rem 0;
+  
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(42, 42, 42, 0.5);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00bb95, #00d4aa);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+      box-shadow: 0 0 10px rgba(0, 187, 149, 0.5);
+    }
+  }
+  
+  .progress-text {
+    font-size: 0.8rem;
+    color: #b0b0b0;
+  }
+}
+
+// Week Chart Styles
+.chart-container {
+  margin: 1rem 0;
+}
+
+.week-chart {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 120px;
+  gap: 8px;
+  
+  .chart-bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    
+    .bar-fill {
+      width: 100%;
+      background: linear-gradient(to top, #00bb95, #00d4aa);
+      border-radius: 4px 4px 0 0;
+      min-height: 4px;
+      transition: height 0.5s ease;
+      box-shadow: 0 0 15px rgba(0, 187, 149, 0.3);
+      
+      &.today {
+        background: linear-gradient(to top, #ff6b6b, #ff8e8e);
+        box-shadow: 0 0 15px rgba(255, 107, 107, 0.4);
+      }
+    }
+    
+    .bar-label {
+      font-size: 0.7rem;
+      color: #b0b0b0;
+      margin-top: 0.5rem;
+    }
+    
+    .bar-value {
+      font-size: 0.6rem;
+      color: #e0e0e0;
+      font-weight: 600;
+    }
+  }
+}
+
+// Productivity Details
+.productivity-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  
+  .score-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .score-label {
+      font-size: 0.8rem;
+      color: #b0b0b0;
+    }
+    
+    .score-value {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #00bb95;
+    }
+  }
+}
+
+// Task Distribution (Pie Chart)
+.task-distribution {
+  margin: 1rem 0;
+  
+  .distribution-chart {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: conic-gradient(
+      #00bb95 0deg calc(var(--todo-percentage, 33) * 3.6deg),
+      #ffd93d calc(var(--todo-percentage, 33) * 3.6deg) calc((var(--todo-percentage, 33) + var(--progress-percentage, 33)) * 3.6deg),
+      #ff6b6b calc((var(--todo-percentage, 33) + var(--progress-percentage, 33)) * 3.6deg) 360deg
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: #1e1e1e;
+      border-radius: 50%;
+    }
+  }
+  
+  .distribution-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      
+      .legend-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+        
+        &.todo { background: #00bb95; }
+        &.progress { background: #ffd93d; }
+        &.done { background: #ff6b6b; }
+      }
+    }
+  }
+}
+
+// Task Lists
+.tile-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  
+  .task-item, .urgent-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: rgba(42, 42, 42, 0.3);
+    border-radius: 10px;
+    border: 1px solid rgba(42, 42, 42, 0.5);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: rgba(42, 42, 42, 0.5);
+      transform: translateX(5px);
+    }
+    
+    .task-info, .urgent-info {
+      flex: 1;
+      
+      .task-title, .urgent-title {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.2rem;
+      }
+      
+      .task-time {
+        font-size: 0.8rem;
+        color: #b0b0b0;
+      }
+      
+      .urgent-deadline {
+        font-size: 0.8rem;
+        color: #b0b0b0;
+        
+        &.overdue {
+          color: #ff6b6b;
+          font-weight: 600;
+        }
+      }
+    }
+    
+    .task-progress-mini {
+      width: 40px;
+      height: 4px;
+      background: rgba(42, 42, 42, 0.5);
+      border-radius: 2px;
+      overflow: hidden;
+      
+      .mini-bar {
+        height: 100%;
+        background: #00bb95;
+        border-radius: 2px;
+        transition: width 0.3s ease;
+      }
+    }
+    
+    .urgency-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      
+      &.overdue { background: #ff4757; }
+      &.urgent { background: #ff6348; }
+      &.warning { background: #ffa502; }
+      &.normal { background: #2ed573; }
+    }
+  }
+}
+
+// Comparison Stats
+.comparison-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1rem 0;
+  
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: rgba(42, 42, 42, 0.3);
+    border-radius: 8px;
+    
+    .stat-label {
+      font-size: 0.8rem;
+      color: #b0b0b0;
+    }
+    
+    .stat-value {
+      font-weight: 600;
+      color: white;
+    }
+    
+    .stat-change {
+      font-size: 0.8rem;
+      font-weight: 500;
+      
+      &.positive {
+        color: #2ed573;
+      }
+      
+      &.negative {
+        color: #ff6b6b;
+      }
+    }
+  }
+}
+
+// Buttons
 .tile-btn {
   margin-top: auto;
   background: linear-gradient(135deg, #00bb95, #00a085);
@@ -146,19 +393,23 @@
     transform: translateY(0);
     box-shadow: 0 2px 8px rgba(0, 187, 149, 0.3);
   }
-}
-
-.dashboard-shortcuts {
-  background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  border: 1px solid #333;
+  
+  &.btn-urgent {
+    background: linear-gradient(135deg, #ff6b6b, #ff5252);
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+    
+    &:hover {
+      background: linear-gradient(135deg, #ff8e8e, #ff6b6b);
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    }
+  }
 }
 
 .tile-shortcut-btns {
   display: flex;
+  flex-direction: column;
   gap: 0.75rem;
   margin-top: 1rem;
-  flex-wrap: wrap;
   
   button {
     background: transparent;
@@ -183,6 +434,50 @@
     
     &:active {
       transform: translateY(0);
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .dashboard-container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+  
+  .dashboard-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .dashboard-tile {
+    padding: 1rem;
+    
+    &.dashboard-tile-wide {
+      grid-column: span 1;
+    }
+  }
+  
+  .tile-value {
+    font-size: 1.5rem;
+  }
+  
+  .week-chart {
+    height: 80px;
+  }
+  
+  .distribution-chart {
+    width: 80px;
+    height: 80px;
+    
+    &::before {
+      width: 40px;
+      height: 40px;
     }
   }
 }

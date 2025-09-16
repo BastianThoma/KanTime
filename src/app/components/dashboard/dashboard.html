@@ -6,61 +6,137 @@
       <div class="tile-icon">⏱️</div>
       <div class="tile-label">Arbeitszeit heute</div>
       <div class="tile-value">{{ formatTime(todayWorked) }}</div>
+      <div class="tile-progress">
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="getTodayProgress()"></div>
+        </div>
+        <span class="progress-text">{{ getTodayProgress() }}% von 8h Ziel</span>
+      </div>
       <button routerLink="/workday-calendar" class="tile-btn">Details</button>
+    </div>
+
+    <!-- Wochentrend -->
+    <div class="dashboard-tile dashboard-tile-wide">
+      <div class="tile-icon">📈</div>
+      <div class="tile-label">7-Tage Trend</div>
+      <div class="chart-container">
+        <div class="week-chart">
+          <div class="chart-bar" *ngFor="let day of weeklyData; let i = index">
+            <div class="bar-fill" 
+                 [style.height.%]="(day.hours / getMaxWeeklyHours()) * 100"
+                 [class.today]="day.isToday">
+            </div>
+            <span class="bar-label">{{ day.label }}</span>
+            <span class="bar-value">{{ day.hours }}h</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Produktivitäts-Score -->
+    <div class="dashboard-tile">
+      <div class="tile-icon">🎯</div>
+      <div class="tile-label">Produktivitäts-Score</div>
+      <div class="tile-value">{{ getProductivityScore() }}%</div>
+      <div class="productivity-details">
+        <div class="score-item">
+          <span class="score-label">Abgeschlossene Tasks</span>
+          <span class="score-value">{{ getCompletedTasksToday() }}</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Fokuszeit</span>
+          <span class="score-value">{{ getFocusTimeRatio() }}%</span>
+        </div>
+      </div>
+      <button routerLink="/tasks" class="tile-btn">Optimize</button>
+    </div>
+
+    <!-- Task Verteilung -->
+    <div class="dashboard-tile">
+      <div class="tile-icon">�</div>
+      <div class="tile-label">Task Status</div>
+      <div class="task-distribution">
+        <div class="distribution-chart" 
+             [style.--todo-percentage]="getTaskPercentage('todo')"
+             [style.--progress-percentage]="getTaskPercentage('in-progress')"
+             [style.--done-percentage]="getTaskPercentage('done')">
+        </div>
+        <div class="distribution-legend">
+          <div class="legend-item">
+            <span class="legend-color todo"></span>
+            <span>Todo ({{ getTaskCount('todo') }})</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color progress"></span>
+            <span>In Progress ({{ getTaskCount('in-progress') }})</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color done"></span>
+            <span>Done ({{ getTaskCount('done') }})</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Aktive Tasks -->
     <div class="dashboard-tile">
-      <div class="tile-icon">�</div>
+      <div class="tile-icon">🚀</div>
       <div class="tile-label">Aktive Tasks</div>
       <ul class="tile-list">
-        <li *ngFor="let task of topTasks">
-          {{ task.title }}
-          <span class="tile-task-time"
-            >{{ formatTime(task.totalTrackedTime) }}</span
-          >
+        <li *ngFor="let task of topTasks" class="task-item">
+          <div class="task-info">
+            <span class="task-title">{{ task.title }}</span>
+            <span class="task-time">{{ formatTime(task.totalTrackedTime) }}</span>
+          </div>
+          <div class="task-progress-mini">
+            <div class="mini-bar" [style.width.%]="getTaskProgress(task)"></div>
+          </div>
         </li>
       </ul>
       <button routerLink="/tasks" class="tile-btn">Alle Tasks</button>
     </div>
 
-    <!-- Letzter Arbeitstag -->
+    <!-- Zeitvergleich -->
     <div class="dashboard-tile">
-      <div class="tile-icon">📅</div>
-      <div class="tile-label">Letzter Arbeitstag</div>
-      <div class="tile-value">
-        {{ lastWorkdayDate ? formatDate(lastWorkdayDate) : '-' }}
+      <div class="tile-icon">�</div>
+      <div class="tile-label">Zeitvergleich</div>
+      <div class="comparison-stats">
+        <div class="stat-row">
+          <span class="stat-label">Heute</span>
+          <span class="stat-value">{{ formatTime(todayWorked) }}</span>
+          <span class="stat-change" [class.positive]="todayWorked > lastWorkedTime" 
+                [class.negative]="todayWorked < lastWorkedTime">
+            {{ getTimeChange() }}
+          </span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Gestern</span>
+          <span class="stat-value">{{ formatTime(lastWorkedTime) }}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Wochenschnitt</span>
+          <span class="stat-value">{{ getWeeklyAverage() }}</span>
+        </div>
       </div>
-      <div class="tile-sub">
-        {{ lastWorkedTasks.length > 0 ? lastWorkedTasks.join(', ') : 'Keine Tasks' }}
-      </div>
-      <div class="tile-sub">Arbeitszeit: {{ formatTime(lastWorkedTime) }}</div>
-      <button routerLink="/workday-calendar" class="tile-btn">
-        Im Kalender
-      </button>
+      <button routerLink="/workday-calendar" class="tile-btn">Verlauf</button>
     </div>
 
-    <!-- Gesamtstatistik -->
-    <div class="dashboard-tile">
-      <div class="tile-icon">📊</div>
-      <div class="tile-label">Gesamtstatistik</div>
-      <div class="tile-value">{{ totalWorkedAll | async }}</div>
-      <button routerLink="/workday-calendar" class="tile-btn">Statistik</button>
-    </div>
-
-    <!-- Deadlines/Planung -->
-    <div class="dashboard-tile">
-      <div class="tile-icon">⏳</div>
-      <div class="tile-label">Nächste Deadlines</div>
-      <ul class="tile-list">
-        <li *ngFor="let task of upcomingTasks">
-          {{ task.title }}
-          <span class="tile-task-date"
-            >{{ formatDate(task.deadline ?? '') }}</span
-          >
+    <!-- Deadlines -->
+    <div class="dashboard-tile dashboard-urgent" *ngIf="getUrgentTasks().length > 0">
+      <div class="tile-icon">⚠️</div>
+      <div class="tile-label">Dringende Deadlines</div>
+      <ul class="tile-list urgent-list">
+        <li *ngFor="let task of getUrgentTasks()" class="urgent-item">
+          <div class="urgent-info">
+            <span class="urgent-title">{{ task.title }}</span>
+            <span class="urgent-deadline" [class.overdue]="isOverdue(task)">
+              {{ getDeadlineText(task) }}
+            </span>
+          </div>
+          <div class="urgency-indicator" [class]="getUrgencyClass(task)"></div>
         </li>
       </ul>
-      <button routerLink="/tasks" class="tile-btn">Planung</button>
+      <button routerLink="/tasks" class="tile-btn btn-urgent">Priorisieren</button>
     </div>
 
     <!-- Schnellzugriff -->
@@ -69,6 +145,7 @@
       <div class="tile-shortcut-btns">
         <button routerLink="/tasks">🗂️ Tasks</button>
         <button routerLink="/workday-calendar">📅 Kalender</button>
+        <button (click)="exportData()">📊 Export</button>
       </div>
     </div>
   </div>
