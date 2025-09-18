@@ -1,0 +1,58 @@
+<nav class="navbar" role="navigation" aria-label="Hauptnavigation">
+  <div class="navbar__container">
+    <!-- Logo Section -->
+    <a routerLink="/" class="navbar__brand" (click)="closeMobileMenu()">
+      <div class="brand__logo">
+        <img src="/assets/img/KanTime_logo.png" alt="KanTime" class="brand__image">
+      </div>
+      <span class="brand__text">KanTime</span>
+    </a>
+
+    <!-- Main Navigation -->
+    <ul class="navbar__nav" role="menubar" [class.navbar__nav--open]="isMobileMenuOpen">
+      <li class="nav__item" *ngFor="let item of navItems" role="none">
+        <a 
+          [routerLink]="item.route"
+          routerLinkActive="nav__link--active"
+          [routerLinkActiveOptions]="{ exact: item.route === '/' }"
+          class="nav__link"
+          role="menuitem"
+          [attr.aria-current]="isActiveRoute(item.route) ? 'page' : null"
+          [title]="item.description"
+          (click)="closeMobileMenu()">
+          <span class="nav__icon">{{ item.icon }}</span>
+          <span class="nav__text">{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Action Buttons -->
+    <div class="navbar__actions">
+      <button class="action__btn action__btn--settings" type="button" title="Einstellungen">
+        <span class="action__icon">⚙️</span>
+      </button>
+      <button class="action__btn action__btn--profile" type="button" title="Profil">
+        <span class="action__icon">👤</span>
+      </button>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button 
+      class="navbar__toggle" 
+      type="button"
+      [class.navbar__toggle--active]="isMobileMenuOpen"
+      (click)="toggleMobileMenu()"
+      aria-label="Menü umschalten">
+      <span class="toggle__line"></span>
+      <span class="toggle__line"></span>
+      <span class="toggle__line"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Overlay -->
+  <div 
+    class="navbar__overlay"
+    [class.navbar__overlay--active]="isMobileMenuOpen"
+    (click)="closeMobileMenu()">
+  </div>
+</nav>

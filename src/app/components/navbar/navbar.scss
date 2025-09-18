@@ -1,0 +1,438 @@
+// ==========================================
+// KanTime Navbar - Farblich angepasst an Projekt
+// ==========================================
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: linear-gradient(145deg, #1b1b1b, #1e1e1e);
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  // ==========================================
+  // Container
+  // ==========================================
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+  }
+
+  // ==========================================
+  // Brand/Logo Section
+  // ==========================================
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.375rem;
+    letter-spacing: -0.02em;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  .brand {
+    &__logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #00bb95, #00d4aa);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 187, 149, 0.3);
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: 0 4px 15px rgba(0, 187, 149, 0.4);
+      }
+    }
+
+    &__image {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    &__text {
+      background: linear-gradient(135deg, #00bb95, #00d4aa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+    }
+  }
+
+  // ==========================================
+  // Navigation
+  // ==========================================
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav {
+    &__item {
+      margin: 0;
+    }
+
+    &__link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      color: #e0e0e0;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      position: relative;
+      border: 1px solid transparent;
+
+      &:hover {
+        color: #ffffff;
+        background: linear-gradient(145deg, #252525, #1e1e1e);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-color: #2a2a2a;
+      }
+
+      &--active {
+        color: #ffffff;
+        background: linear-gradient(135deg, #00bb95, #00a085);
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0, 187, 149, 0.3);
+
+        &:hover {
+          background: linear-gradient(135deg, #00d4aa, #00bb95);
+          box-shadow: 0 4px 15px rgba(0, 187, 149, 0.4);
+        }
+
+        .nav__icon {
+          filter: none;
+        }
+      }
+    }
+
+    &__icon {
+      font-size: 1.125rem;
+      filter: grayscale(50%);
+      transition: filter 0.2s ease;
+    }
+
+    &__text {
+      white-space: nowrap;
+    }
+  }
+
+  // ==========================================
+  // Action Buttons
+  // ==========================================
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .action {
+    &__btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #2a2a2a;
+      background: linear-gradient(145deg, #252525, #1e1e1e);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #e0e0e0;
+
+      &:hover {
+        background: linear-gradient(145deg, #2a2a2a, #252525);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-color: #00bb95;
+        color: #ffffff;
+      }
+
+      &--settings {
+        .action__icon {
+          filter: hue-rotate(150deg);
+        }
+      }
+
+      &--profile {
+        background: linear-gradient(135deg, #00bb95, #00a085);
+        border-color: transparent;
+        color: #ffffff;
+
+        .action__icon {
+          filter: brightness(0) invert(1);
+        }
+
+        &:hover {
+          background: linear-gradient(135deg, #00d4aa, #00bb95);
+          box-shadow: 0 4px 15px rgba(0, 187, 149, 0.4);
+        }
+      }
+    }
+
+    &__icon {
+      font-size: 1.1rem;
+      transition: transform 0.2s ease;
+    }
+  }
+
+  // ==========================================
+  // Mobile Toggle
+  // ==========================================
+  &__toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(145deg, #252525, #1e1e1e);
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: linear-gradient(145deg, #2a2a2a, #252525);
+      border-color: #00bb95;
+      transform: translateY(-2px);
+    }
+
+    &--active {
+      .toggle__line {
+        &:nth-child(1) {
+          transform: translateY(6px) rotate(45deg);
+        }
+        &:nth-child(2) {
+          opacity: 0;
+        }
+        &:nth-child(3) {
+          transform: translateY(-6px) rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  .toggle {
+    &__line {
+      width: 20px;
+      height: 2px;
+      background: #e0e0e0;
+      margin: 2px 0;
+      transition: all 0.3s ease;
+      border-radius: 1px;
+    }
+  }
+
+  // ==========================================
+  // Mobile Overlay
+  // ==========================================
+  &__overlay {
+    display: none;
+    position: fixed;
+    top: 72px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+
+    &--active {
+      opacity: 1;
+    }
+  }
+}
+
+// ==========================================
+// Responsive Design
+// ==========================================
+
+// Tablet and Mobile
+@media (max-width: 768px) {
+  .navbar {
+    &__container {
+      padding: 0 1rem;
+      height: 64px;
+    }
+
+    &__nav {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(145deg, #1b1b1b, #1e1e1e);
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+      padding: 2rem 1.5rem;
+      gap: 1rem;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      border-top: 1px solid #2a2a2a;
+
+      &--open {
+        transform: translateX(0);
+      }
+    }
+
+    .nav {
+      &__link {
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
+        border-radius: 16px;
+        width: 100%;
+        justify-content: flex-start;
+        color: #e0e0e0;
+
+        &:hover {
+          background: linear-gradient(145deg, #252525, #1e1e1e);
+          color: #ffffff;
+        }
+      }
+
+      &__icon {
+        font-size: 1.25rem;
+      }
+    }
+
+    &__actions {
+      gap: 0.75rem;
+    }
+
+    &__toggle {
+      display: flex;
+    }
+
+    &__overlay {
+      display: block;
+
+      &--active {
+        display: block;
+      }
+    }
+
+    .brand {
+      &__text {
+        font-size: 1.25rem;
+      }
+    }
+  }
+}
+
+// Large Mobile
+@media (max-width: 480px) {
+  .navbar {
+    &__container {
+      padding: 0 0.75rem;
+    }
+
+    &__nav {
+      padding: 1.5rem 1rem;
+    }
+
+    .brand {
+      &__logo {
+        width: 36px;
+        height: 36px;
+      }
+
+      &__image {
+        width: 20px;
+        height: 20px;
+      }
+
+      &__text {
+        font-size: 1.125rem;
+      }
+    }
+
+    .action__btn {
+      width: 36px;
+      height: 36px;
+    }
+
+    &__toggle {
+      width: 36px;
+      height: 36px;
+    }
+  }
+}
+
+// Large Desktop
+@media (min-width: 1200px) {
+  .navbar {
+    &__container {
+      padding: 0 2rem;
+    }
+
+    .nav {
+      &__link {
+        padding: 0.875rem 1.5rem;
+      }
+    }
+  }
+}
+
+// ==========================================
+// Accessibility & Motion
+// ==========================================
+@media (prefers-reduced-motion: reduce) {
+  .navbar {
+    * {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}
+
+// ==========================================
+// High Contrast Mode Support
+// ==========================================
+@media (prefers-contrast: high) {
+  .navbar {
+    background: #000;
+    border-bottom: 2px solid #00bb95;
+
+    .nav__link {
+      border: 1px solid transparent;
+
+      &:hover,
+      &--active {
+        border-color: #00bb95;
+        background-color: #333;
+      }
+    }
+  }
+}

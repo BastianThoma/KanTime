@@ -2,8 +2,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
   position: relative;
+  padding-top: 72px; // Space for fixed navbar (updated height)
 }
 
 // Enhanced app animations
@@ -25,6 +25,7 @@
 // Mobile optimizations
 @media (max-width: 768px) {
   .app-body {
-    background: #1f1f1f; // Simplified gradient for mobile performance
+    background: #f8fafc; // Clean light background
+    padding-top: 64px; // Mobile navbar height
   }
 }
