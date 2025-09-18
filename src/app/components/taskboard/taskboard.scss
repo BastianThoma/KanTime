@@ -40,12 +40,18 @@ $desktop: 928px;
 
 // Component Styling
 .taskboard {
+  max-width: 1920px;
+  margin: 2rem auto;
   padding: 2rem;
-  background: linear-gradient(135deg, $background-dark 0%, color.scale($background-dark, $lightness: 5%) 100%);
-  min-height: calc(100vh - 72px);
+  background: linear-gradient(145deg, #1b1b1b, #1e1e1e);
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid #2a2a2a;
   color: $text-light;
+  min-height: calc(100vh - 144px); // Adjusted for container padding and margins
 
   @media (max-width: $tablet) {
+    margin: 1rem;
     padding: 1rem;
   }
 

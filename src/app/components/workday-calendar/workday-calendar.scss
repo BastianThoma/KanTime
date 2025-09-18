@@ -1,5 +1,5 @@
 .workday-calendar-container {
-  max-width: 1200px;
+  max-width: 1920px;
   margin: 2rem auto;
   padding: 1.5rem;
   background: linear-gradient(145deg, #1b1b1b, #1e1e1e);
@@ -32,7 +32,7 @@
 
   // Large Screen Optimierungen (929px+)
   @media (min-width: 929px) {
-    max-width: 1400px;
+    max-width: 1920px;
     padding: 2rem;
 
     h2 {
@@ -69,14 +69,20 @@
   gap: 1rem;
   width: 100%;
 
-  @media (min-width: 769px) and (max-width: 928px) {
-    grid-template-columns: repeat(2, 1fr);
+  // Progressive responsive grid optimization for large displays
+  @media (min-width: 1600px) {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1.25rem;
   }
 
-  @media (min-width: 929px) {
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.5rem;
+  @media (min-width: 1200px) and (max-width: 1599px) {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 769px) and (max-width: 1199px) {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.25rem;
   }
 
   @media (max-width: 768px) {
@@ -102,6 +108,7 @@
   border: 1px solid #2a2a2a;
   overflow: hidden;
   width: 100%;
+  max-width: 400px;
   box-sizing: border-box;
 
   &:hover {

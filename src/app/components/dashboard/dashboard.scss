@@ -1,5 +1,5 @@
 .dashboard-container {
-  max-width: 1200px;
+  max-width: 1920px;
   margin: 2rem auto;
   padding: 1.5rem;
   background: #1b1b1b;
@@ -23,10 +23,27 @@
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
-  max-width: 1400px;
+  max-width: 1920px;
   margin: 0 auto;
+
+  // Responsive Grid für verschiedene Displaygrößen
+  @media (min-width: 480px) {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+
+  @media (min-width: 1600px) {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
 }
 
 .dashboard-tile {
@@ -39,6 +56,7 @@
   position: relative;
   overflow: hidden;
   border: 1px solid #2a2a2a;
+  max-width: 500px; // Vergrößerte Max-width für normale Cards
 
   &:hover {
     transform: translateY(-4px);
@@ -48,6 +66,11 @@
 
   &.dashboard-tile-wide {
     grid-column: span 2;
+    max-width: none; // Keine Max-width für Tage-Trends - nutzt volle Breite
+    
+    @media (max-width: 1200px) {
+      grid-column: span 2;
+    }
     
     @media (max-width: 768px) {
       grid-column: span 1;
