@@ -1,64 +1,438 @@
-<div class="kanban-container">
-  <h2 class="kanban-title">Neue Aufgabe</h2>
-  <div class="kanban-input-row">
-    <input [(ngModel)]="newTitle" type="text" placeholder="Aufgabe eingeben" class="kanban-input" />
-    <textarea [(ngModel)]="newDescription" placeholder="Beschreibung (optional)" class="kanban-input textarea" rows="2"></textarea>
-    <input [(ngModel)]="newDeadline" type="date" class="kanban-input date-input" placeholder="Deadline" />
-    <button (click)="addTask()" class="kanban-add-btn">Hinzufügen</button>
+<div class="taskboard">
+  <!-- Header with Controls -->
+  <div class="taskboard__header">
+    <div class="header__title">
+      <h1>📋 Task Board</h1>
+      <p>Verwalten Sie Ihre Aufgaben mit dem Kanban-System</p>
+    </div>
+    
+    <div class="header__controls">
+      <button 
+        class="btn btn--primary"
+        (click)="toggleAddTaskForm()"
+        [class.btn--active]="showAddTaskForm">
+        <span class="btn__icon">➕</span>
+        <span class="btn__text">Neue Aufgabe</span>
+      </button>
+    </div>
   </div>
 
+  <!-- Filters & Search -->
+  <div class="taskboard__filters" [class.taskboard__filters--hidden]="!showAddTaskForm">
+    <div class="filters__search">
+      <input 
+        type="text" 
+        placeholder="🔍 Aufgaben durchsuchen..."
+        [(ngModel)]="searchTerm"
+        class="search__input">
+    </div>
+    
+    <div class="filters__controls">
+      <select [(ngModel)]="filterPriority" class="filter__select">
+        <option value="all">Alle Prioritäten</option>
+        <option value="urgent">🔴 Dringend</option>
+        <option value="high">🟠 Hoch</option>
+        <option value="medium">🟡 Mittel</option>
+        <option value="low">🔵 Niedrig</option>
+      </select>
+      
+      <select [(ngModel)]="filterCategory" class="filter__select">
+        <option value="all">Alle Kategorien</option>
+        <option value="development">💻 Development</option>
+        <option value="design">🎨 Design</option>
+        <option value="meeting">👥 Meeting</option>
+        <option value="documentation">📝 Dokumentation</option>
+        <option value="bug">🐛 Bug</option>
+        <option value="feature">✨ Feature</option>
+        <option value="research">🔬 Research</option>
+        <option value="other">📦 Sonstiges</option>
+      </select>
+      
+      <select [(ngModel)]="sortBy" class="filter__select">
+        <option value="order">📋 Manuelle Reihenfolge</option>
+        <option value="priority">🎯 Nach Priorität</option>
+        <option value="deadline">📅 Nach Deadline</option>
+        <option value="created">🕒 Nach Erstelldatum</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Add Task Form -->
+  <div class="add-task" [class.add-task--visible]="showAddTaskForm">
+    <div class="add-task__form">
+      <div class="form__row">
+        <input 
+          type="text"
+          placeholder="Aufgabentitel eingeben..."
+          [(ngModel)]="newTitle"
+          class="form__input form__input--title">
+      </div>
+      
+      <div class="form__row">
+        <textarea 
+          placeholder="Beschreibung (optional)..."
+          [(ngModel)]="newDescription"
+          class="form__textarea"
+          rows="3"></textarea>
+      </div>
+      
+      <div class="form__row form__row--grid">
+        <select [(ngModel)]="newPriority" class="form__select">
+          <option value="low">🔵 Niedrige Priorität</option>
+          <option value="medium">🟡 Mittlere Priorität</option>
+          <option value="high">🟠 Hohe Priorität</option>
+          <option value="urgent">🔴 Dringend</option>
+        </select>
+        
+        <select [(ngModel)]="newCategory" class="form__select">
+          <option value="development">💻 Development</option>
+          <option value="design">🎨 Design</option>
+          <option value="meeting">👥 Meeting</option>
+          <option value="documentation">📝 Dokumentation</option>
+          <option value="bug">🐛 Bug</option>
+          <option value="feature">✨ Feature</option>
+          <option value="research">🔬 Research</option>
+          <option value="other">📦 Sonstiges</option>
+        </select>
+      </div>
+      
+      <div class="form__row form__row--grid">
+        <input 
+          type="date"
+          [(ngModel)]="newDeadline"
+          class="form__input"
+          placeholder="Deadline">
+          
+        <input 
+          type="number"
+          placeholder="Geschätzte Stunden"
+          [(ngModel)]="newEstimatedTime"
+          class="form__input"
+          min="0"
+          step="0.5">
+      </div>
+      
+      <div class="form__row">
+        <input 
+          type="text"
+          placeholder="Tags (komma-getrennt)..."
+          [(ngModel)]="newTags"
+          class="form__input">
+      </div>
+      
+      <div class="form__actions">
+        <button 
+          class="btn btn--secondary"
+          (click)="resetForm()">
+          Abbrechen
+        </button>
+        <button 
+          class="btn btn--primary"
+          (click)="addTask()"
+          [disabled]="!newTitle.trim()">
+          <span class="btn__icon">✅</span>
+          <span class="btn__text">Aufgabe erstellen</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kanban Board -->
   <div class="kanban-board" cdkDropListGroup>
-    <div class="kanban-column" data-status="todo">
-      <h3 class="kanban-column-title">To Do</h3>
-      <ul class="kanban-list" cdkDropList id="todoList" [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="onDrop($event, 'todo')">
-        <li *ngFor="let task of todoTasks$ | async" class="kanban-card" [attr.data-task-id]="task.id" cdkDrag>
-          <div class="kanban-card-content">
-            <button (click)="deleteTask(task.id)" class="kanban-delete-btn" title="Löschen">
+    <!-- Todo Column -->
+    <div class="kanban__column">
+      <div class="column__header">
+        <h3 class="column__title">
+          <span class="column__icon">📝</span>
+          <span class="column__text">To Do</span>
+          <span class="column__count">{{ (todoTasks$ | async)?.length || 0 }}</span>
+        </h3>
+      </div>
+      
+      <div 
+        class="column__content"
+        cdkDropList 
+        id="todoList" 
+        [cdkDropListConnectedTo]="dropListIds" 
+        (cdkDropListDropped)="onDrop($event, 'todo')">
+        
+        <div 
+          class="task-card"
+          *ngFor="let task of todoTasks$ | async"
+          [attr.data-task-id]="task.id"
+          cdkDrag
+          (click)="openTaskDetails(task)">
+          
+          <div class="task-card__header">
+            <div class="task__priority" [style.background-color]="getPriorityColor(task.priority)">
+              {{ task.priority }}
+            </div>
+            <div class="task__category" [style.background-color]="getCategoryColor(task.category)">
+              {{ task.category }}
+            </div>
+            <button 
+              class="task__delete"
+              (click)="deleteTask(task.id); $event.stopPropagation()"
+              title="Löschen">
               🗑️
             </button>
-            <strong class="kanban-card-title">{{ task.title }}</strong>
-            <span class="kanban-card-desc">Beschreibung: {{ task.description || '-' }}</span>
-            <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'dd.MM.yyyy, HH:mm' }}</span>
-            <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'dd.MM.yyyy, HH:mm' }}</span>
-            <span class="kanban-card-time">Tracked Time: {{ task.totalTrackedTime }} Sek.</span>
           </div>
-        </li>
-      </ul>
+          
+          <h4 class="task__title">{{ task.title }}</h4>
+          
+          <p class="task__description" *ngIf="task.description">
+            {{ task.description }}
+          </p>
+          
+          <div class="task__tags" *ngIf="task.tags && task.tags.length > 0">
+            <span class="tag" *ngFor="let tag of task.tags">{{ tag }}</span>
+          </div>
+          
+          <div class="task__meta">
+            <div class="meta__time" *ngIf="task.totalTrackedTime > 0">
+              ⏱️ {{ formatTime(task.totalTrackedTime) }}
+            </div>
+            <div class="meta__estimate" *ngIf="task.estimatedTime">
+              📊 {{ formatTime(task.estimatedTime) }}
+            </div>
+            <div class="meta__deadline" *ngIf="task.deadline" [class.meta__deadline--overdue]="isOverdue(task)">
+              📅 {{ task.deadline | date:'dd.MM.yyyy' }}
+            </div>
+          </div>
+          
+          <div class="task__progress" *ngIf="task.estimatedTime">
+            <div class="progress__bar">
+              <div 
+                class="progress__fill" 
+                [style.width.%]="getProgress(task)">
+              </div>
+            </div>
+            <span class="progress__text">{{ getProgress(task) | number:'1.0-0' }}%</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="kanban-column" data-status="in-progress">
-      <h3 class="kanban-column-title">In Progress</h3>
-      <ul class="kanban-list" cdkDropList id="inProgressList" [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="onDrop($event, 'in-progress')">
-        <li *ngFor="let task of inProgressTasks$ | async" class="kanban-card" [attr.data-task-id]="task.id" cdkDrag>
-          <div class="kanban-card-content">
-            <button (click)="deleteTask(task.id)" class="kanban-delete-btn" title="Löschen">
+
+    <!-- In Progress Column -->
+    <div class="kanban__column">
+      <div class="column__header">
+        <h3 class="column__title">
+          <span class="column__icon">⚡</span>
+          <span class="column__text">In Progress</span>
+          <span class="column__count">{{ (inProgressTasks$ | async)?.length || 0 }}</span>
+        </h3>
+      </div>
+      
+      <div 
+        class="column__content"
+        cdkDropList 
+        id="inProgressList" 
+        [cdkDropListConnectedTo]="dropListIds" 
+        (cdkDropListDropped)="onDrop($event, 'in-progress')">
+        
+        <div 
+          class="task-card task-card--in-progress"
+          *ngFor="let task of inProgressTasks$ | async"
+          [attr.data-task-id]="task.id"
+          cdkDrag
+          (click)="openTaskDetails(task)">
+          
+          <div class="task-card__header">
+            <div class="task__priority" [style.background-color]="getPriorityColor(task.priority)">
+              {{ task.priority }}
+            </div>
+            <div class="task__category" [style.background-color]="getCategoryColor(task.category)">
+              {{ task.category }}
+            </div>
+            <button 
+              class="task__delete"
+              (click)="deleteTask(task.id); $event.stopPropagation()"
+              title="Löschen">
               🗑️
             </button>
-            <strong class="kanban-card-title">{{ task.title }}</strong>
-            <span class="kanban-card-desc">Beschreibung: {{ task.description || '-' }}</span>
-            <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'dd.MM.yyyy, HH:mm' }}</span>
-            <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'dd.MM.yyyy, HH:mm' }}</span>
-            <span class="kanban-card-time">Tracked Time: {{ task.totalTrackedTime }} Sek.</span>
           </div>
-        </li>
-      </ul>
+          
+          <h4 class="task__title">{{ task.title }}</h4>
+          
+          <p class="task__description" *ngIf="task.description">
+            {{ task.description }}
+          </p>
+          
+          <div class="task__tags" *ngIf="task.tags && task.tags.length > 0">
+            <span class="tag" *ngFor="let tag of task.tags">{{ tag }}</span>
+          </div>
+          
+          <div class="task__meta">
+            <div class="meta__time" *ngIf="task.totalTrackedTime > 0">
+              ⏱️ {{ formatTime(task.totalTrackedTime) }}
+            </div>
+            <div class="meta__estimate" *ngIf="task.estimatedTime">
+              📊 {{ formatTime(task.estimatedTime) }}
+            </div>
+            <div class="meta__deadline" *ngIf="task.deadline" [class.meta__deadline--overdue]="isOverdue(task)">
+              📅 {{ task.deadline | date:'dd.MM.yyyy' }}
+            </div>
+          </div>
+          
+          <div class="task__progress" *ngIf="task.estimatedTime">
+            <div class="progress__bar">
+              <div 
+                class="progress__fill" 
+                [style.width.%]="getProgress(task)">
+              </div>
+            </div>
+            <span class="progress__text">{{ getProgress(task) | number:'1.0-0' }}%</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="kanban-column" data-status="done">
-      <h3 class="kanban-column-title">Done</h3>
-      <ul class="kanban-list" cdkDropList id="doneList" [cdkDropListConnectedTo]="dropListIds" (cdkDropListDropped)="onDrop($event, 'done')">
-        <li *ngFor="let task of doneTasks$ | async" class="kanban-card" [attr.data-task-id]="task.id" cdkDrag>
-          <div class="kanban-card-content">
-            <button (click)="deleteTask(task.id)" class="kanban-delete-btn" title="Löschen">
+
+    <!-- Done Column -->
+    <div class="kanban__column">
+      <div class="column__header">
+        <h3 class="column__title">
+          <span class="column__icon">✅</span>
+          <span class="column__text">Done</span>
+          <span class="column__count">{{ (doneTasks$ | async)?.length || 0 }}</span>
+        </h3>
+      </div>
+      
+      <div 
+        class="column__content"
+        cdkDropList 
+        id="doneList" 
+        [cdkDropListConnectedTo]="dropListIds" 
+        (cdkDropListDropped)="onDrop($event, 'done')">
+        
+        <div 
+          class="task-card task-card--done"
+          *ngFor="let task of doneTasks$ | async"
+          [attr.data-task-id]="task.id"
+          cdkDrag
+          (click)="openTaskDetails(task)">
+          
+          <div class="task-card__header">
+            <div class="task__priority" [style.background-color]="getPriorityColor(task.priority)">
+              {{ task.priority }}
+            </div>
+            <div class="task__category" [style.background-color]="getCategoryColor(task.category)">
+              {{ task.category }}
+            </div>
+            <button 
+              class="task__delete"
+              (click)="deleteTask(task.id); $event.stopPropagation()"
+              title="Löschen">
               🗑️
             </button>
-            <strong class="kanban-card-title">{{ task.title }}</strong>
-            <span class="kanban-card-desc">Beschreibung: {{ task.description || '-' }}</span>
-            <span class="kanban-card-date">Erstellt: {{ task.createdAt | date:'dd.MM.yyyy, HH:mm' }}</span>
-            <span class="kanban-card-date">Letzte Änderung: {{ task.updatedAt | date:'dd.MM.yyyy, HH:mm' }}</span>
-            <span class="kanban-card-time">Tracked Time: {{ task.totalTrackedTime }} Sek.</span>
           </div>
-        </li>
-      </ul>
+          
+          <h4 class="task__title">{{ task.title }}</h4>
+          
+          <p class="task__description" *ngIf="task.description">
+            {{ task.description }}
+          </p>
+          
+          <div class="task__tags" *ngIf="task.tags && task.tags.length > 0">
+            <span class="tag" *ngFor="let tag of task.tags">{{ tag }}</span>
+          </div>
+          
+          <div class="task__meta">
+            <div class="meta__time" *ngIf="task.totalTrackedTime > 0">
+              ⏱️ {{ formatTime(task.totalTrackedTime) }}
+            </div>
+            <div class="meta__estimate" *ngIf="task.estimatedTime">
+              📊 {{ formatTime(task.estimatedTime) }}
+            </div>
+            <div class="meta__deadline" *ngIf="task.deadline" [class.meta__deadline--overdue]="isOverdue(task)">
+              📅 {{ task.deadline | date:'dd.MM.yyyy' }}
+            </div>
+          </div>
+          
+          <div class="task__progress" *ngIf="task.estimatedTime">
+            <div class="progress__bar">
+              <div 
+                class="progress__fill progress__fill--complete" 
+                [style.width.%]="100">
+              </div>
+            </div>
+            <span class="progress__text">Abgeschlossen ✓</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Details Modal -->
+  <div class="modal" [class.modal--visible]="showTaskModal" *ngIf="selectedTask">
+    <div class="modal__overlay" (click)="closeTaskModal()"></div>
+    <div class="modal__content">
+      <div class="modal__header">
+        <h3>Task bearbeiten</h3>
+        <button class="modal__close" (click)="closeTaskModal()">✕</button>
+      </div>
+      
+      <div class="modal__body">
+        <div class="form__row">
+          <label class="form__label">Titel</label>
+          <input 
+            type="text"
+            [(ngModel)]="selectedTask.title"
+            class="form__input">
+        </div>
+        
+        <div class="form__row">
+          <label class="form__label">Beschreibung</label>
+          <textarea 
+            [(ngModel)]="selectedTask.description"
+            class="form__textarea"
+            rows="4"></textarea>
+        </div>
+        
+        <div class="form__row form__row--grid">
+          <div>
+            <label class="form__label">Priorität</label>
+            <select [(ngModel)]="selectedTask.priority" class="form__select">
+              <option value="low">🔵 Niedrig</option>
+              <option value="medium">🟡 Mittel</option>
+              <option value="high">🟠 Hoch</option>
+              <option value="urgent">🔴 Dringend</option>
+            </select>
+          </div>
+          
+          <div>
+            <label class="form__label">Kategorie</label>
+            <select [(ngModel)]="selectedTask.category" class="form__select">
+              <option value="development">💻 Development</option>
+              <option value="design">🎨 Design</option>
+              <option value="meeting">👥 Meeting</option>
+              <option value="documentation">📝 Dokumentation</option>
+              <option value="bug">🐛 Bug</option>
+              <option value="feature">✨ Feature</option>
+              <option value="research">🔬 Research</option>
+              <option value="other">📦 Sonstiges</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form__row">
+          <label class="form__label">Tags (komma-getrennt)</label>
+          <input 
+            type="text"
+            [value]="selectedTask.tags.join(', ') || ''"
+            (input)="updateTaskTags($event)"
+            class="form__input">
+        </div>
+      </div>
+      
+      <div class="modal__footer">
+        <button class="btn btn--secondary" (click)="closeTaskModal()">
+          Abbrechen
+        </button>
+        <button class="btn btn--primary" (click)="saveTask()">
+          <span class="btn__icon">💾</span>
+          <span class="btn__text">Speichern</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
-

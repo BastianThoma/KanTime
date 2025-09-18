@@ -10,5 +10,7 @@ export const selectAllTasks = createSelector(
 
 export const selectTasksByStatus = (status: string) =>
   createSelector(selectAllTasks, tasks =>
-    tasks.filter(task => task.status === status)
+    tasks
+      .filter(task => task.status === status)
+      .sort((a, b) => (a.order || 0) - (b.order || 0))
   );
