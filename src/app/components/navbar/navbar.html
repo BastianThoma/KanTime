@@ -28,6 +28,53 @@
 
     <!-- Action Buttons -->
     <div class="navbar__actions">
+      <!-- Drag & Drop Zone für Tracker Parking -->
+      <div 
+        class="docking-zone"
+        *ngIf="!dockingService.isDocked() && !dockingService.isMobile()"
+        cdkDropList
+        id="tracker-parking-zone"
+        [cdkDropListData]="[]"
+        (cdkDropListDropped)="onTrackerDrop($event)"
+        [title]="'Tracker hier ablegen zum Parken'"
+        #dockingZone>
+        <span class="docking-icon">📦</span>
+        <span class="docking-text">Tracker parken</span>
+      </div>
+
+      <!-- Docked Timer Display (Desktop) -->
+      <div 
+        class="docked-timer" 
+        *ngIf="dockingService.isDocked() && trackerHasActiveTime() && !dockingService.isMobile()"
+        (click)="onDockedTimerClick()"
+        [title]="'Klicken zum Maximieren • ' + getCurrentTaskTitle()">
+        <span class="timer-icon">⏱️</span>
+        <span class="timer-text">{{ getCurrentTimerDisplay() }}</span>
+      </div>
+
+      <!-- Alternative: Zeige immer wenn gedockt (für Tests) -->
+      <div 
+        class="docked-timer" 
+        *ngIf="dockingService.isDocked() && !dockingService.isMobile() && !trackerHasActiveTime()"
+        (click)="onDockedTimerClick()"
+        title="Klicken zum Maximieren • Kein Timer aktiv"
+        style="opacity: 0.6;">
+        <span class="timer-icon">⏲️</span>
+        <span class="timer-text">00:00:00</span>
+      </div>
+
+      <!-- Mobile Timer Button -->
+      <button 
+        class="action__btn action__btn--timer" 
+        *ngIf="dockingService.isMobile()"
+        (click)="onMobileTimerClick()"
+        [title]="trackerHasActiveTime() ? 'Timer läuft: ' + getCurrentTimerDisplay() : 'Timer öffnen'">
+        <span class="action__icon" [class.active]="trackerHasActiveTime()">
+          {{ trackerHasActiveTime() ? '⏱️' : '⏲️' }}
+        </span>
+        <span class="mobile-timer-text" *ngIf="trackerHasActiveTime()">{{ getCurrentTimerDisplay() }}</span>
+      </button>
+
       <button class="action__btn action__btn--settings" type="button" title="Einstellungen">
         <span class="action__icon">⚙️</span>
       </button>

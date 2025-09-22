@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { TaskService } from './task.service';
 import * as TaskActions from './task.actions';
 import * as TimeActions from '../time/time.actions';
-import { switchMap, map, catchError, withLatestFrom, filter, mergeMap } from 'rxjs/operators';
+import { switchMap, map, catchError, withLatestFrom, filter, mergeMap, delay } from 'rxjs/operators';
 import { selectCurrentTask, selectTotalWorked } from '../time/time.selectors';
 import { selectAllTasks } from './task.selectors';
 import { of, from } from 'rxjs';
@@ -21,6 +21,7 @@ export class TaskEffects {
   loadTasks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TaskActions.loadTasks),
+      delay(100), // Kurze Verzögerung für Firebase-Initialisierung
       switchMap(() =>
         this.taskService.getTasks().pipe(
           map((tasks: Task[]) => TaskActions.loadTasksSuccess({ tasks })),

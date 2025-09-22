@@ -1,10 +1,39 @@
 <div
   class="workday-tracker-floating workday-tracker-container"
+  [cdkDragDisabled]="dockingService.isFullscreen()"
   cdkDrag
+  [cdkDragData]="{ type: 'workday-tracker' }"
+  (cdkDragEnded)="onDragDropped($event)"
+  (cdkDragStarted)="onDragStarted()"
+  (cdkDragMoved)="onDragMoved($event)"
   cdkDragBoundary="body"
   cdkDragRootElement=".workday-tracker-floating"
+  *ngIf="dockingService.isVisible()"
+  [class.mobile-fullscreen]="dockingService.isFullscreen()"
 >
-  <h2>Arbeitszeit-Tracker</h2>
+  <!-- Header with Title and Controls -->
+  <div class="tracker-header">
+    <h2>Arbeitszeit-Tracker</h2>
+    <div class="header-controls">
+      <!-- Minimize Button (Desktop) -->
+      <button 
+        class="minimize-btn" 
+        *ngIf="!dockingService.isMobile()"
+        (click)="dockTracker()"
+        title="In Navbar parken">
+        <span>📦</span>
+      </button>
+      
+      <!-- Close Button (Mobile Fullscreen) -->
+      <button 
+        class="close-btn" 
+        *ngIf="dockingService.isMobile() && dockingService.isFullscreen()"
+        (click)="closeFullscreen()"
+        title="Schließen">
+        <span>✕</span>
+      </button>
+    </div>
+  </div>
   
   <!-- Live Timer Display -->
   <div class="live-timer" [class.active]="trackerStatus === 'running' || trackerStatus === 'paused'">

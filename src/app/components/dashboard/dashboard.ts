@@ -169,7 +169,10 @@ export class Dashboard implements OnInit, OnDestroy {
         this.todayWorked = totalSeconds;
         console.log('Arbeitszeit heute (Sekunden, alle Workdays):', totalSeconds);
       } else {
-        console.log('Kein Workday für heute gefunden.');
+        // Nur beim ersten Aufruf loggen, um Spam zu vermeiden
+        if (this.todayWorked === 0) {
+          console.log('Kein Workday für heute gefunden.');
+        }
       }
       
       // Change Detection triggern nach Datenladung

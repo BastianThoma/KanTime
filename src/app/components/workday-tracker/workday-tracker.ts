@@ -1,16 +1,17 @@
-import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { DragDropModule, CdkDragEnd } from '@angular/cdk/drag-drop';
 import { TimeSection } from '../../state/time/time.model';
 import { selectTimeState } from '../../state/time/time.selectors';
 import { startSection, endSection, stopWorkDay } from '../../state/time/time.actions';
-import { combineLatest, firstValueFrom } from 'rxjs';
+import { combineLatest, firstValueFrom, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { WorkdayService } from '../../state/workday/workday.service';
 import { loadTasks } from '../../state/task/task.actions';
 import { saveWorkday, loadWorkdays } from '../../state/workday/workday.actions';
+import { TrackerDockingService } from '../../services/tracker-docking.service';
 @Component({
   selector: 'app-workday-tracker',
   imports: [CommonModule, FormsModule, DragDropModule],
@@ -20,15 +21,52 @@ import { saveWorkday, loadWorkdays } from '../../state/workday/workday.actions';
 export class WorkdayTracker implements OnInit, OnDestroy {
   private workdayService = inject(WorkdayService);
   private cdr = inject(ChangeDetectorRef);
+  private ngZone = inject(NgZone);
+  
+  /** Docking Service für Tracker-Management */
+  dockingService = inject(TrackerDockingService);
+
   ngOnInit() {
     this.store.dispatch(loadTasks());
+    
+    // Time State abonnieren für Timer-Updates UND Section Widths
     this.timeState$.subscribe((state) => {
       this.updateSectionWidths(state.sections);
+      this.updateTimerFromState(state);
     });
+
+    // Auf Mobile standardmäßig docken
+    if (this.dockingService.isMobile() && !this.dockingService.isDocked()) {
+      this.dockingService.dockTracker();
+    }
   }
 
   ngOnDestroy() {
     this.stopTimer();
+  }
+
+  /**
+   * Timer basierend auf NgRx State updaten
+   */
+  private updateTimerFromState(state: any): void {
+    const hasActiveSections = state.sections.length > 0;
+    const lastSection = hasActiveSections ? state.sections[state.sections.length - 1] : null;
+    
+    if (lastSection && !lastSection.end) {
+      // Aktive Session läuft
+      this.trackerStatus = lastSection.type === 'work' ? 'running' : 'paused';
+      this.sessionStartTime = lastSection.start;
+      this.startTimer();
+    } else {
+      // Keine aktive Session
+      this.trackerStatus = hasActiveSections ? 'stopped' : 'idle';
+      this.stopTimer();
+      this.currentSessionTime = 0;
+      this.sessionStartTime = undefined; // Nur hier zurücksetzen
+    }
+    
+    // Change Detection manuell triggern
+    this.cdr.detectChanges();
   }
 
   // Live Timer Methods
@@ -36,16 +74,27 @@ export class WorkdayTracker implements OnInit, OnDestroy {
     // Vorherigen Timer stoppen falls vorhanden
     this.stopTimer();
     
-    this.sessionStartTime = Date.now();
-    this.currentSessionTime = 0;
+    // sessionStartTime wird von NgRx State gesetzt, nicht hier überschreiben
+    if (this.sessionStartTime) {
+      // Initiale Zeit berechnen
+      this.currentSessionTime = Math.floor((Date.now() - this.sessionStartTime) / 1000);
+    }
     
-    this.timerInterval = window.setInterval(() => {
-      if (this.sessionStartTime) {
-        this.currentSessionTime = Math.floor((Date.now() - this.sessionStartTime) / 1000);
-        // Change Detection manuell triggern
-        this.cdr.detectChanges();
-      }
-    }, 1000);
+    // Timer außerhalb der Angular Zone starten
+    this.ngZone.runOutsideAngular(() => {
+      this.timerInterval = window.setInterval(() => {
+        if (this.sessionStartTime) {
+          // Update innerhalb der Angular Zone ausführen
+          this.ngZone.run(() => {
+            if (this.sessionStartTime) { // Zusätzliche Prüfung für TypeScript
+              this.currentSessionTime = Math.floor((Date.now() - this.sessionStartTime) / 1000);
+              // Change Detection manuell triggern
+              this.cdr.detectChanges();
+            }
+          });
+        }
+      }, 1000);
+    });
   }
 
   private stopTimer(): void {
@@ -53,8 +102,8 @@ export class WorkdayTracker implements OnInit, OnDestroy {
       clearInterval(this.timerInterval);
       this.timerInterval = undefined;
     }
+    // sessionStartTime NICHT hier zurücksetzen, da es vom NgRx State kommt
     this.currentSessionTime = 0;
-    this.sessionStartTime = undefined;
   }
 
   formatSessionTime(): string {
@@ -235,5 +284,104 @@ export class WorkdayTracker implements OnInit, OnDestroy {
     this.trackerStatus = 'stopped';
     this.hasPausedOnce = false;
     this.stopTimer(); // Timer stoppen und resetten
+  }
+
+  // ==========================================
+  // Docking-bezogene Methoden
+  // ==========================================
+
+  /**
+   * Tracker in Navbar parken (Desktop)
+   */
+  dockTracker(): void {
+    this.dockingService.dockTracker();
+  }
+
+  /**
+   * Fullscreen schließen (Mobile)
+   */
+  closeFullscreen(): void {
+    this.dockingService.closeFullscreen();
+  }
+
+  /**
+   * Tracker maximieren (wird von Navbar aufgerufen)
+   */
+  maximizeTracker(): void {
+    this.dockingService.undockTracker();
+  }
+
+  /**
+   * Handler für Drag Start
+   */
+  onDragStarted(): void {
+    // Reset any previous drag-over states
+    this.removeDragOverEffects();
+  }
+
+  /**
+   * Handler für Drag Move - prüft ob über Docking Zone
+   */
+  onDragMoved(event: any): void {
+    const dropZone = document.querySelector('.docking-zone');
+    const tracker = document.querySelector('.workday-tracker-floating');
+    
+    if (dropZone && tracker) {
+      const rect = dropZone.getBoundingClientRect();
+      const pointer = event.pointerPosition;
+      
+      // Prüfen ob Mauszeiger über Docking-Zone ist
+      const isOverZone = pointer.x >= rect.left && 
+                        pointer.x <= rect.right && 
+                        pointer.y >= rect.top && 
+                        pointer.y <= rect.bottom;
+      
+      if (isOverZone) {
+        // Über Zone - Effekte hinzufügen
+        dropZone.classList.add('drag-over');
+        tracker.classList.add('drag-over-dock');
+      } else {
+        // Nicht über Zone - Effekte entfernen
+        dropZone.classList.remove('drag-over');
+        tracker.classList.remove('drag-over-dock');
+      }
+    }
+  }
+
+  /**
+   * Entfernt alle Drag-Over Effekte
+   */
+  private removeDragOverEffects(): void {
+    const dropZone = document.querySelector('.docking-zone');
+    const tracker = document.querySelector('.workday-tracker-floating');
+    
+    if (dropZone) {
+      dropZone.classList.remove('drag-over');
+    }
+    if (tracker) {
+      tracker.classList.remove('drag-over-dock');
+    }
+  }
+
+  /**
+   * Handler für Drag Drop Events
+   */
+  onDragDropped(event: CdkDragEnd): void {
+    // Effekte immer zurücksetzen nach dem Drop
+    this.removeDragOverEffects();
+    
+    // Prüfen ob über Docking-Zone gedroppt wurde
+    const dropZone = document.querySelector('.docking-zone');
+    if (dropZone) {
+      const rect = dropZone.getBoundingClientRect();
+      const x = event.dropPoint.x;
+      const y = event.dropPoint.y;
+      
+      // Prüfen ob Drop-Punkt innerhalb der Docking-Zone liegt
+      if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+        this.dockingService.dockTracker();
+        console.log('Tracker wurde per Drag & Drop geparkt!');
+      }
+    }
   }
 }

@@ -275,6 +275,32 @@
   list-style: none;
   padding: 0;
   margin: 1rem 0;
+  max-height: 200px; // Max-height für Tasks mit Scroll
+  overflow-y: auto;
+  
+  // Custom Scrollbar für coolen Look
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(42, 42, 42, 0.3);
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #00bb95, #00a085);
+    border-radius: 3px;
+    transition: background 0.3s ease;
+    
+    &:hover {
+      background: linear-gradient(to bottom, #00d4aa, #00bb95);
+    }
+  }
+  
+  // Firefox Scrollbar
+  scrollbar-width: thin;
+  scrollbar-color: #00bb95 rgba(42, 42, 42, 0.3);
   
   .task-item, .urgent-item {
     display: flex;

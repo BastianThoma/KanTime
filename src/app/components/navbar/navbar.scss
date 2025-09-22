@@ -196,11 +196,193 @@
           box-shadow: 0 4px 15px rgba(0, 187, 149, 0.4);
         }
       }
+
+      &--timer {
+        background: linear-gradient(135deg, #00bb95, #00a085);
+        border-color: transparent;
+        color: #ffffff;
+        width: auto;
+        min-width: 40px;
+        padding: 0 0.75rem;
+        gap: 0.5rem;
+
+        .action__icon {
+          filter: brightness(0) invert(1);
+          
+          &.active {
+            animation: pulse 2s infinite;
+          }
+        }
+
+        .mobile-timer-text {
+          font-family: 'Courier New', monospace;
+          font-weight: 600;
+          font-size: 0.8rem;
+          letter-spacing: 0.5px;
+        }
+
+        &:hover {
+          background: linear-gradient(135deg, #00d4aa, #00bb95);
+          box-shadow: 0 4px 15px rgba(0, 187, 149, 0.4);
+        }
+
+        @media (max-width: 480px) {
+          padding: 0 0.5rem;
+          
+          .mobile-timer-text {
+            font-size: 0.7rem;
+            letter-spacing: 0.2px;
+          }
+        }
+      }
     }
 
     &__icon {
       font-size: 1.1rem;
       transition: transform 0.2s ease;
+    }
+  }
+
+  // ==========================================
+  // Docked Timer Display
+  // ==========================================
+  .docking-zone {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: linear-gradient(145deg, #2a2a2a, #252525);
+    border: 2px dashed #555;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #888;
+    font-size: 0.85rem;
+    min-width: 120px;
+    justify-content: center;
+
+    &:hover {
+      border-color: #00bb95;
+      background: linear-gradient(145deg, #2f2f2f, #2a2a2a);
+      color: #00bb95;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(0, 187, 149, 0.2);
+    }
+
+    // Drag Over State - wird aktiv wenn Tracker darüber gezogen wird
+    &.drag-over {
+      border-color: #00d4aa !important;
+      background: linear-gradient(145deg, rgba(0, 187, 149, 0.15), rgba(0, 187, 149, 0.08)) !important;
+      color: #00d4aa !important;
+      box-shadow: 0 0 25px rgba(0, 187, 149, 0.4) !important;
+      animation: pulse-docking 0.8s infinite !important;
+      transform: scale(1.02) !important;
+    }
+
+    // CDK Drop List Receiving State  
+    &.cdk-drop-list-receiving {
+      border-color: #00d4aa;
+      background: linear-gradient(145deg, rgba(0, 187, 149, 0.1), rgba(0, 187, 149, 0.05));
+      color: #00d4aa;
+      box-shadow: 0 0 20px rgba(0, 187, 149, 0.3);
+      animation: pulse-docking 1s infinite;
+    }
+
+    .docking-icon {
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+
+    .docking-text {
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    // Mobile Responsive
+    @media (max-width: 768px) {
+      padding: 0.4rem 0.6rem;
+      font-size: 0.8rem;
+      min-width: 100px;
+      
+      .docking-icon {
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      padding: 0.3rem 0.5rem;
+      font-size: 0.75rem;
+      min-width: 80px;
+      
+      .docking-text {
+        display: none; // Nur Icon auf sehr kleinen Screens
+      }
+    }
+  }
+
+  @keyframes pulse-docking {
+    0%, 100% {
+      transform: translateY(-1px) scale(1);
+    }
+    50% {
+      transform: translateY(-1px) scale(1.05);
+    }
+  }
+
+  .docked-timer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: linear-gradient(135deg, #00bb95, #00a085);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 8px rgba(0, 187, 149, 0.3);
+    border: 1px solid rgba(0, 187, 149, 0.2);
+
+    &:hover {
+      background: linear-gradient(135deg, #00d4aa, #00bb95);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 187, 149, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    .timer-icon {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .timer-text {
+      font-family: 'Courier New', monospace;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    // Mobile Responsive
+    @media (max-width: 768px) {
+      padding: 0.4rem 0.6rem;
+      font-size: 0.8rem;
+      
+      .timer-icon {
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      padding: 0.3rem 0.5rem;
+      font-size: 0.75rem;
+      
+      .timer-text {
+        letter-spacing: 0.2px;
+      }
     }
   }
 
@@ -271,6 +453,20 @@
     &--active {
       opacity: 1;
     }
+  }
+}
+
+// ==========================================
+// Animations
+// ==========================================
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
   }
 }
 
@@ -402,6 +598,20 @@
         padding: 0.875rem 1.5rem;
       }
     }
+  }
+}
+
+// ==========================================
+// Animations
+// ==========================================
+@keyframes pulse-docking {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
   }
 }
 

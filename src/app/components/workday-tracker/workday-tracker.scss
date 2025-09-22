@@ -1,3 +1,97 @@
+// ==========================================
+// Tracker Header with Controls
+// ==========================================
+.tracker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  
+  h2 {
+    margin: 0;
+    color: #00bb95;
+    background: linear-gradient(135deg, #00bb95, #00d4aa);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+}
+
+.header-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.minimize-btn, .close-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #2a2a2a;
+  background: linear-gradient(145deg, #252525, #1e1e1e);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #e0e0e0;
+  font-size: 1rem;
+
+  &:hover {
+    background: linear-gradient(145deg, #2a2a2a, #252525);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-color: #00bb95;
+    color: #ffffff;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.close-btn {
+  background: linear-gradient(145deg, #ff4757, #ff3742);
+  border-color: rgba(255, 71, 87, 0.3);
+  
+  &:hover {
+    background: linear-gradient(145deg, #ff6b6b, #ff4757);
+    border-color: #ff4757;
+  }
+}
+
+// ==========================================
+// Mobile Fullscreen Mode
+// ==========================================
+.mobile-fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 9999 !important;
+  margin: 0 !important;
+  max-width: none !important;
+  border-radius: 0 !important;
+  padding: 2rem !important;
+  background: linear-gradient(145deg, #1b1b1b, #1e1e1e) !important;
+  
+  .tracker-header {
+    h2 {
+      font-size: 2.2rem;
+    }
+  }
+  
+  // Disable CDK Drag in fullscreen
+  &.cdk-drag-disabled {
+    cursor: default;
+  }
+}
+
+// ==========================================
+// Button Styles
+// ==========================================
 .workday-controls button {
   background: linear-gradient(135deg, #00bb95, #00a085);
   color: #ffffff;
@@ -408,6 +502,26 @@
     // Remove all transforms and transitions during drag
     transition: none !important;
     transform: none !important;
+  }
+  
+  // Spezielle Styles wenn über Docking-Zone gezogen wird
+  &.drag-over-dock {
+    border-color: #00d4aa !important;
+    box-shadow: 0 20px 60px rgba(0, 212, 170, 0.3) !important;
+    background: linear-gradient(145deg, rgba(37, 37, 37, 0.95), rgba(30, 30, 30, 0.95)) !important;
+    backdrop-filter: blur(15px) !important;
+    transform: scale(1.02) !important;
+    transition: none !important;
+    
+    .workday-tracker-container {
+      border-color: #00d4aa !important;
+      background: rgba(0, 187, 149, 0.08) !important;
+    }
+    
+    .tracker-header h2 {
+      color: #00d4aa !important;
+      text-shadow: 0 0 10px rgba(0, 212, 170, 0.5) !important;
+    }
   }
 
   // Mobile optimizations
