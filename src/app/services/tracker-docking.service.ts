@@ -192,7 +192,7 @@ export class TrackerDockingService {
         this.resetToDefault();
       }
     } catch (error) {
-      console.warn('Could not load tracker docking state from localStorage:', error);
+      // Could not load tracker docking state from localStorage
       this.resetToDefault();
     }
   }
@@ -212,7 +212,7 @@ export class TrackerDockingService {
       };
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(stateToSave));
     } catch (error) {
-      console.warn('Could not save tracker docking state to localStorage:', error);
+      // Could not save tracker docking state to localStorage
     }
   }
 }

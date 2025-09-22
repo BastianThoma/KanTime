@@ -159,7 +159,6 @@ export class Navbar implements OnDestroy {
     if (event.item.data?.type === 'workday-tracker') {
       // Tracker wurde in die Docking-Zone gezogen - parken
       this.dockingService.dockTracker();
-      console.log('Tracker wurde per Drag & Drop geparkt!');
     }
     // Reset drag-over state
     this.onDragExitZone();
@@ -223,7 +222,6 @@ export class Navbar implements OnDestroy {
     this.onDragExitZone();
     // Tracker parken (funktioniert mit nativem Drag & Drop)
     this.dockingService.dockTracker();
-    console.log('Tracker wurde per nativem Drag & Drop geparkt!');
   }
 
   /**

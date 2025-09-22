@@ -38,9 +38,8 @@ export class WorkdayCalendar {
         new Date(b.date).getTime() - new Date(a.date).getTime()
       );
       this.cdr.detectChanges();
-      console.log('Geladene Workdays:', this.workdays.map(w => ({ id: w.id, date: w.date, sections: w.sections.length })));
     } catch (error) {
-      console.error('Fehler beim Laden der Workdays:', error);
+      // Fehler beim Laden der Workdays
       this.workdays = [];
     }
   }
@@ -142,7 +141,7 @@ export class WorkdayCalendar {
       this.cancelEditing();
       this.cdr.detectChanges();
     } catch (error) {
-      console.error('Fehler beim Speichern:', error);
+      // Fehler beim Speichern
       alert('Fehler beim Speichern der Änderungen!');
     }
   }
@@ -160,7 +159,7 @@ export class WorkdayCalendar {
     try {
       // Prüfen ob workday eine ID hat
       if (!workday.id) {
-        console.error('Workday hat keine ID:', workday);
+        // Workday hat keine ID
         alert('Fehler: Workday kann nicht gelöscht werden (keine ID)');
         return;
       }
@@ -175,7 +174,7 @@ export class WorkdayCalendar {
       this.workdays = this.workdays.filter(w => w.id !== workday.id);
       this.cdr.detectChanges();
     } catch (error) {
-      console.error('Fehler beim Löschen:', error);
+      // Fehler beim Löschen
       alert('Fehler beim Löschen des Arbeitstags!');
     }
   }

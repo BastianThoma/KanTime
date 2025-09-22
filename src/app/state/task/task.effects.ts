@@ -56,7 +56,6 @@ export class TaskEffects {
         const task = tasks.find(t => t.id === action.taskId);
         const previousTracked = task?.totalTrackedTime ?? 0;
         const newTracked = previousTracked + Math.floor(action.totalWorked / 1000);
-        console.log('updateTrackedTime$', { taskId: action.taskId, previousTracked, newTracked, task, totalWorked: action.totalWorked });
         return from(
           this.taskService.updateTask(action.taskId!, { totalTrackedTime: newTracked }).then(() => [
             TaskActions.updateTrackedTime({ id: action.taskId!, totalTrackedTime: newTracked }),

@@ -146,7 +146,7 @@ export class Dashboard implements OnInit, OnDestroy {
       // Change Detection triggern nach Datenladung
       this.cdr.detectChanges();
     } catch (error) {
-      console.error('Error loading yesterday worked:', error);
+      // Error loading yesterday worked
     }
   }
 
@@ -159,7 +159,6 @@ export class Dashboard implements OnInit, OnDestroy {
       let totalSeconds = 0;
       if (todayWorkdays.length > 0) {
         const workSections = todayWorkdays.flatMap(wd => wd.sections.filter(s => s.type === 'work'));
-        console.log('Alle Work-Abschnitte heute (alle Workdays):', workSections);
         totalSeconds = workSections
           .reduce(
             (sum, s) =>
@@ -167,18 +166,17 @@ export class Dashboard implements OnInit, OnDestroy {
             0
           );
         this.todayWorked = totalSeconds;
-        console.log('Arbeitszeit heute (Sekunden, alle Workdays):', totalSeconds);
       } else {
         // Nur beim ersten Aufruf loggen, um Spam zu vermeiden
         if (this.todayWorked === 0) {
-          console.log('Kein Workday für heute gefunden.');
+          // Kein Workday für heute gefunden
         }
       }
       
       // Change Detection triggern nach Datenladung
       this.cdr.detectChanges();
     } catch (error) {
-      console.error('Error loading today worked:', error);
+      // Error loading today worked
     }
   };
 
@@ -220,7 +218,7 @@ export class Dashboard implements OnInit, OnDestroy {
       // Change Detection triggern nach Datenladung
       this.cdr.detectChanges();
     } catch (error) {
-      console.error('Error loading weekly data:', error);
+      // Error loading weekly data
     }
   }
 

@@ -380,7 +380,6 @@ export class WorkdayTracker implements OnInit, OnDestroy {
       // Prüfen ob Drop-Punkt innerhalb der Docking-Zone liegt
       if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
         this.dockingService.dockTracker();
-        console.log('Tracker wurde per Drag & Drop geparkt!');
       }
     }
   }
