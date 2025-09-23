@@ -1,19 +1,16 @@
 import { Routes } from '@angular/router';
-import { Dashboard } from './components/dashboard/dashboard';
-import { Taskboard } from './components/taskboard/taskboard';
-import { WorkdayCalendar } from './components/workday-calendar/workday-calendar';
 
 export const routes: Routes = [
     {
         path: '',
-        component: Dashboard,
+        loadComponent: () => import('./components/dashboard/dashboard').then(m => m.Dashboard),
     },
     {
         path: 'tasks',
-        component: Taskboard,
+        loadComponent: () => import('./components/taskboard/taskboard').then(m => m.Taskboard),
     },
     {
         path: 'workday-calendar',
-        component: WorkdayCalendar,
+        loadComponent: () => import('./components/workday-calendar/workday-calendar').then(m => m.WorkdayCalendar),
     },
 ];
