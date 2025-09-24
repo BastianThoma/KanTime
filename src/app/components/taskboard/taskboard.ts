@@ -1,4 +1,4 @@
-import { Component, NgModule, inject, OnInit } from '@angular/core';
+import { Component, NgModule, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
@@ -18,6 +18,7 @@ import { TaskService } from '../../state/task/task.service';
   imports: [CommonModule, FormsModule, DragDropModule],
   templateUrl: './taskboard.html',
   styleUrl: './taskboard.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Taskboard implements OnInit {
   private store = inject(Store);

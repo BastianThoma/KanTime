@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef, NgZone, ChangeDetectionStrategy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +17,7 @@ import { TrackerDockingService } from '../../services/tracker-docking.service';
   imports: [CommonModule, FormsModule, DragDropModule],
   templateUrl: './workday-tracker.html',
   styleUrl: './workday-tracker.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkdayTracker implements OnInit, OnDestroy {
   private workdayService = inject(WorkdayService);

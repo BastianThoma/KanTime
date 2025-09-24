@@ -1,3 +1,5 @@
+@use '../../shared/styles/variables' as *;
+
 .workday-calendar-container {
   max-width: 1920px;
   margin: 2rem auto;
@@ -12,54 +14,27 @@
     font-size: 2.2rem;
     font-weight: 700;
     margin-bottom: 2rem;
-    color: #00bb95;
-    background: linear-gradient(135deg, #00bb95, #00d4aa);
+    color: $primary-color;
+    background: linear-gradient(135deg, $primary-color, $secondary-color);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
-  // Medium Screen Optimierungen (769px - 928px)
-  @media (min-width: 769px) and (max-width: 928px) {
-    max-width: 900px;
-    padding: 1.25rem;
-
-    h2 {
-      font-size: 2rem;
-      margin-bottom: 1.75rem;
-    }
-  }
-
-  // Large Screen Optimierungen (929px+)
-  @media (min-width: 929px) {
-    max-width: 1920px;
-    padding: 2rem;
-
-    h2 {
-      font-size: 2.5rem;
-      margin-bottom: 2.5rem;
-    }
-  }
-
-  // Mobile Anpassungen
-  @media (max-width: 768px) {
-    padding: 1rem;
-    margin: 1rem;
-
-    h2 {
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-    }
-  }
-
   @media (max-width: 480px) {
     margin: 0.5rem;
     padding: 0.75rem;
+    h2 { font-size: 1.6rem; margin-bottom: 1rem; }
+  }
 
-    h2 {
-      font-size: 1.6rem;
-      margin-bottom: 1rem;
-    }
+  @media (min-width: 481px) and (max-width: 768px) {
+    padding: 1rem;
+    margin: 1rem;
+    h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+  }
+
+  @media (min-width: 769px) {
+    h2 { font-size: 2.5rem; margin-bottom: 2.5rem; }
   }
 }
 

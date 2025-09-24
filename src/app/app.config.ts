@@ -3,7 +3,8 @@ import {
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withPreloading } from '@angular/router';
+import { SelectivePreloadingService } from './shared/services/selective-preloading.service';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
@@ -20,16 +21,18 @@ import { TimeEffects } from './state/time/time.effects';
 import { taskReducer } from './state/task/task.reducer';
 import { TaskEffects } from './state/task/task.effects';
 import { workdayReducer } from './state/workday/workday.reducer';
+import { isDevMode } from '@angular/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideAnimations(),
-    provideRouter(routes),
+    provideRouter(routes, withPreloading(SelectivePreloadingService)),
     provideStore({ time: timeReducer, task: taskReducer, workday: workdayReducer }),
     provideEffects(TimeEffects, TaskEffects),
-    provideStoreDevtools({ maxAge: 25 }),
+    // DevTools nur in Development Mode
+    ...(isDevMode() ? [provideStoreDevtools({ maxAge: 25 })] : []),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
   ],
