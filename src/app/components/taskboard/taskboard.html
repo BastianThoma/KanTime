@@ -10,8 +10,15 @@
       <button 
         class="btn btn--primary"
         (click)="toggleAddTaskForm()"
-        [class.btn--active]="showAddTaskForm">
-        <span class="btn__icon">➕</span>
+        [class.btn--active]="showAddTaskForm"
+        [disabled]="loadingService.isLoading('addTask')"
+        [attr.aria-label]="'Neue Aufgabe erstellen. Keyboard-Shortcut: Strg+N'"
+        title="Neue Aufgabe (Strg+N)">
+        @if (loadingService.isLoading('addTask')) {
+          <app-loading-spinner size="small"></app-loading-spinner>
+        } @else {
+          <span class="btn__icon">➕</span>
+        }
         <span class="btn__text">Neue Aufgabe</span>
       </button>
     </div>
@@ -22,9 +29,11 @@
     <div class="filters__search">
       <input 
         type="text" 
-        placeholder="🔍 Aufgaben durchsuchen..."
+        placeholder="🔍 Aufgaben durchsuchen... (Drücke 'S' für Shortcut)"
         [(ngModel)]="searchTerm"
-        class="search__input">
+        class="search__input"
+        data-keyboard="search"
+        [attr.aria-label]="'Aufgaben durchsuchen. Verwende Keyboard-Shortcut S oder F.'">
     </div>
     
     <div class="filters__controls">

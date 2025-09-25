@@ -1,0 +1,152 @@
+@use '../styles/variables' as *;
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &--small {
+    .spinner {
+      width: 1rem;
+      height: 1rem;
+      border-width: 2px;
+    }
+    
+    .loading-text {
+      font-size: 0.75rem;
+    }
+  }
+
+  &--medium {
+    .spinner {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-width: 2px;
+    }
+    
+    .loading-text {
+      font-size: 0.875rem;
+    }
+  }
+
+  &--large {
+    .spinner {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-width: 3px;
+    }
+    
+    .loading-text {
+      font-size: 1rem;
+    }
+  }
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.spinner {
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  border-top: 2px solid $primary-color;
+  width: 1.5rem;
+  height: 1.5rem;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  color: #e0e0e0;
+  font-weight: 500;
+  margin: 0;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+// Animations
+@keyframes spin {
+  0% { 
+    transform: rotate(0deg); 
+  }
+  100% { 
+    transform: rotate(360deg); 
+  }
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+  }
+  to { 
+    opacity: 1; 
+  }
+}
+
+// Pulsing Animation für besondere Effekte
+.spinner--pulse {
+  animation: spin 1s linear infinite, pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from {
+    border-top-color: $primary-color;
+    box-shadow: 0 0 0 0 rgba(0, 187, 149, 0.4);
+  }
+  to {
+    border-top-color: $secondary-color;
+    box-shadow: 0 0 0 8px rgba(0, 212, 170, 0);
+  }
+}
+
+// Responsive Anpassungen
+@media (max-width: 480px) {
+  .loading-overlay .spinner-container {
+    padding: 1rem;
+  }
+
+  .loading-text {
+    font-size: 0.875rem;
+  }
+}
+
+// High Contrast Mode Support
+@media (prefers-contrast: high) {
+  .spinner {
+    border-top-color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .loading-text {
+    color: #ffffff;
+  }
+}
+
+// Reduced Motion Support
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+    border: 2px solid $primary-color;
+  }
+  
+  .loading-overlay {
+    animation: none;
+  }
+}

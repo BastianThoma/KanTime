@@ -8,6 +8,11 @@ import { Task, TaskPriority, TaskCategory } from '../../state/task/task.model';
 import * as TaskActions from '../../state/task/task.actions';
 import { selectTasksByStatus } from '../../state/task/task.selectors';
 import { TaskService } from '../../state/task/task.service';
+import { ToastService } from '../../shared/services/toast.service';
+import { LoadingService } from '../../shared/services/loading.service';
+import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner.component';
+import { KeyboardService } from '../../shared/services/keyboard.service';
+import { ErrorHandlerService } from '../../shared/services/error-handler.service';
 
 /**
  * Enhanced Taskboard Component mit Kanban-Board Layout
@@ -15,7 +20,7 @@ import { TaskService } from '../../state/task/task.service';
  */
 @Component({
   selector: 'app-taskboard',
-  imports: [CommonModule, FormsModule, DragDropModule],
+  imports: [CommonModule, FormsModule, DragDropModule, LoadingSpinnerComponent],
   templateUrl: './taskboard.html',
   styleUrl: './taskboard.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -23,6 +28,10 @@ import { TaskService } from '../../state/task/task.service';
 export class Taskboard implements OnInit {
   private store = inject(Store);
   private taskService = inject(TaskService);
+  private toastService = inject(ToastService);
+  protected loadingService = inject(LoadingService);
+  private keyboardService = inject(KeyboardService);
+  private errorHandler = inject(ErrorHandlerService);
   
   dropListIds = ['todoList', 'inProgressList', 'doneList'];
 
@@ -68,6 +77,44 @@ export class Taskboard implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(TaskActions.loadTasks());
+    this.setupKeyboardShortcuts();
+  }
+
+  /**
+   * Initialisiert Keyboard-Shortcuts
+   */
+  private setupKeyboardShortcuts(): void {
+    this.keyboardService.keyboardEvents.subscribe(event => {
+      // Verhindere Shortcuts wenn Input/Textarea fokussiert ist
+      if (event.target instanceof HTMLInputElement || 
+          event.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      // Ctrl+N: Neue Task erstellen
+      if (this.keyboardService.isShortcut(event, 'n', { ctrl: true })) {
+        this.toggleAddTaskForm();
+        this.keyboardService.preventDefault(event as any);
+      }
+
+      // Escape: Formulare schließen
+      if (event.key === 'Escape') {
+        this.showAddTaskForm = false;
+        this.showTaskModal = false;
+      }
+
+      // F: Filter fokussieren
+      if (event.key === 'f' && !event.ctrlKey) {
+        this.keyboardService.focusElement('[data-keyboard="search"]');
+        this.keyboardService.preventDefault(event as any);
+      }
+
+      // S: Search fokussieren
+      if (event.key === 's' && !event.ctrlKey) {
+        this.keyboardService.focusElement('[data-keyboard="search"]');
+        this.keyboardService.preventDefault(event as any);
+      }
+    });
   }
 
   /**
@@ -108,18 +155,31 @@ export class Taskboard implements OnInit {
       order: maxOrder + 1, // Neue Task am Ende der Liste
     };
 
-    await this.taskService.addTask(newTask);
-    this.store.dispatch(TaskActions.loadTasks());
-    this.resetForm();
+    await this.loadingService.withLoading('addTask', async () => {
+      try {
+        await this.taskService.addTask(newTask);
+        this.store.dispatch(TaskActions.loadTasks());
+        this.resetForm();
+        this.toastService.success(`Task "${newTask.title}" wurde erfolgreich erstellt! 🎉`);
+      } catch (error) {
+        this.errorHandler.handleError(error, 'Task erstellen');
+        throw error;
+      }
+    });
   }
 
   /**
    * Löscht eine Task
    */
   async deleteTask(id: string) {
-    if (confirm('Möchten Sie diese Aufgabe wirklich löschen?')) {
-      await this.taskService.deleteTask(id);
-      this.store.dispatch(TaskActions.loadTasks());
+    try {
+      if (confirm('Möchten Sie diese Task wirklich löschen?')) {
+        await this.taskService.deleteTask(id);
+        this.store.dispatch(TaskActions.loadTasks());
+        this.toastService.success('Task wurde erfolgreich gelöscht.');
+      }
+    } catch (error) {
+      this.errorHandler.handleError(error, 'Task löschen');
     }
   }
 
@@ -130,18 +190,32 @@ export class Taskboard implements OnInit {
     const taskId = event.item.data?.id || event.item.element.nativeElement.getAttribute('data-task-id');
     
     if (taskId) {
-      // Schritt 1: Status und Order der bewegten Task zusammen updaten
-      await this.taskService.updateTask(taskId, { 
-        status: newStatus,
-        order: event.currentIndex,
-        updatedAt: Date.now()
-      });
-      
-      // Schritt 2: Andere Tasks in der Zielspalte entsprechend anpassen
-      await this.reorderOtherTasks(newStatus, event.currentIndex, taskId);
-      
-      // Schritt 3: Store refreshen (erst nach allen Updates)
-      this.store.dispatch(TaskActions.loadTasks());
+      try {
+        // Schritt 1: Status und Order der bewegten Task zusammen updaten
+        await this.taskService.updateTask(taskId, { 
+          status: newStatus,
+          order: event.currentIndex,
+          updatedAt: Date.now()
+        });
+        
+        // Schritt 2: Andere Tasks in der Zielspalte entsprechend anpassen
+        await this.reorderOtherTasks(newStatus, event.currentIndex, taskId);
+        
+        // Schritt 3: Store refreshen (erst nach allen Updates)
+        this.store.dispatch(TaskActions.loadTasks());
+        
+        // Success Toast mit Status-spezifischer Nachricht
+        const statusMessages = {
+          'todo': 'in die Todo-Liste verschoben',
+          'in-progress': 'zu "In Bearbeitung" verschoben',
+          'done': 'als erledigt markiert'
+        };
+        this.toastService.success(`Task wurde ${statusMessages[newStatus]}! ✨`);
+        
+      } catch (error) {
+        this.errorHandler.handleError(error, 'Task verschieben');
+        // Hier könnte man zusätzlich ein Revert implementieren
+      }
     }
   }
 
