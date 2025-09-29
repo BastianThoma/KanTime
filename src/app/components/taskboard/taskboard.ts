@@ -388,6 +388,20 @@ export class Taskboard implements OnInit {
   }
 
   /**
+   * Gibt das aktuelle Datum formatiert zurück
+   */
+  getCurrentDate(): string {
+    const today = new Date();
+    const options: Intl.DateTimeFormatOptions = { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    };
+    return today.toLocaleDateString('de-DE', options);
+  }
+
+  /**
    * Toggle für Add Task Form
    */
   toggleAddTaskForm() {
