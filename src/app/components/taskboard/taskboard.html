@@ -146,6 +146,18 @@
     </div>
   </div>
 
+  <!-- Quick Stats -->
+  <div class="taskboard__stats">
+    <div class="stats__item">
+      <span class="stats__number">{{ getTotalTaskCount() }}</span>
+      <span class="stats__label">Gesamt</span>
+    </div>
+    <div class="stats__item">
+      <span class="stats__number">{{ getProgressPercentage() }}%</span>
+      <span class="stats__label">Fortschritt</span>
+    </div>
+  </div>
+
   <!-- Kanban Board -->
   <div class="kanban-board" cdkDropListGroup>
     <!-- Todo Column -->

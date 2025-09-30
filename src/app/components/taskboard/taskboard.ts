@@ -402,6 +402,30 @@ export class Taskboard implements OnInit {
   }
 
   /**
+   * Berechnet die Gesamtanzahl aller Tasks
+   */
+  getTotalTaskCount(): number {
+    let total = 0;
+    this.todoTasks$.subscribe(tasks => total += tasks.length).unsubscribe();
+    this.inProgressTasks$.subscribe(tasks => total += tasks.length).unsubscribe();
+    this.doneTasks$.subscribe(tasks => total += tasks.length).unsubscribe();
+    return total;
+  }
+
+  /**
+   * Berechnet den Fortschritt in Prozent (erledigte Tasks)
+   */
+  getProgressPercentage(): number {
+    const total = this.getTotalTaskCount();
+    if (total === 0) return 0;
+    
+    let doneCount = 0;
+    this.doneTasks$.subscribe(tasks => doneCount = tasks.length).unsubscribe();
+    
+    return Math.round((doneCount / total) * 100);
+  }
+
+  /**
    * Toggle für Add Task Form
    */
   toggleAddTaskForm() {
