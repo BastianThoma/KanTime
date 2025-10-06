@@ -462,6 +462,12 @@ $desktop: 928px;
     margin-bottom: 0;
   }
 
+  // Sichtbarer Fokus, wenn ein interaktives Element innerhalb der Karte fokussiert ist
+  &:focus-within {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+  }
+
   // Deaktiviere Transitions während Drag
   &.cdk-drag-preview {
     transition: none !important;
@@ -674,6 +680,11 @@ $desktop: 928px;
       &:hover {
         color: $text-light;
         background: rgba($border-color, 0.5);
+      }
+
+      &:focus-visible {
+        outline: 2px solid $primary-color;
+        outline-offset: 3px;
       }
     }
   }
