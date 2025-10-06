@@ -366,6 +366,15 @@ $desktop: 928px;
     outline-offset: 3px;
     border-radius: 6px;
   }
+
+  // Keyboard-Fokus für interaktive Steuerelemente (Buttons/Links)
+  button:focus-visible,
+  [role="button"]:focus-visible,
+  a:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
 }
 
 // Kanban Board
