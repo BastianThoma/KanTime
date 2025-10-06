@@ -312,6 +312,12 @@ $desktop: 928px;
   text-decoration: none;
   white-space: nowrap;
 
+  // Accessibility: sichtbarer Fokusrahmen für Tastaturnavigation
+  &:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 3px;
+  }
+
   &__icon {
     font-size: 1rem;
   }
