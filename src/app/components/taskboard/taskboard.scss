@@ -357,6 +357,17 @@ $desktop: 928px;
   }
 }
 
+// Accessibility: sichtbarer Fokusrahmen für Form-Felder innerhalb des Taskboards (WCAG)
+.taskboard {
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
 // Kanban Board
 .kanban-board {
   display: grid;
