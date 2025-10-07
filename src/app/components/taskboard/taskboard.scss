@@ -787,6 +787,12 @@ $desktop: 928px;
   &:active {
     cursor: grabbing;
   }
+  
+  // Tastatur-Fokus für Drag-Items  
+  &:focus-visible {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+  }
 }
 
 .cdk-drag-placeholder {
