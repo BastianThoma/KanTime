@@ -516,6 +516,11 @@ $desktop: 928px;
         color: $error-color;
         background: rgba($error-color, 0.1);
       }
+
+      &:focus-visible {
+        outline: 2px solid $error-color;
+        outline-offset: 2px;
+      }
     }
   }
 
