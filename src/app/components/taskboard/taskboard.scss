@@ -460,6 +460,11 @@ $desktop: 928px;
   position: relative;
   will-change: transform;
 
+  // Reduced motion für bessere Accessibility
+  @media (prefers-reduced-motion: reduce) {
+    transition: border-color 0.2s ease;
+  }
+
   &:hover:not(.cdk-drag-preview) {
     transform: translateY(-2px) translateZ(0);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
