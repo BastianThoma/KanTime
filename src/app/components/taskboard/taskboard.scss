@@ -479,6 +479,7 @@ $desktop: 928px;
   &:focus-within {
     border-color: $primary-color;
     box-shadow: 0 0 0 3px rgba($primary-color, 0.2);
+    outline: 1px solid transparent; // Verbessertes High-Contrast-Support
   }
 
   // Deaktiviere Transitions während Drag
