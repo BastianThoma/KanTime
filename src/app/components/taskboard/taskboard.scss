@@ -203,6 +203,10 @@ $desktop: 928px;
         cursor: pointer;
         transition: all 0.3s ease;
 
+        &:hover {
+          border-color: rgba($primary-color, 0.6);
+        }
+
         &:focus {
           outline: none;
           border-color: $primary-color;
@@ -327,10 +331,32 @@ $desktop: 928px;
   &--primary {
     background: linear-gradient(135deg, $primary-color 0%, $primary-light 100%);
     color: white;
+    position: relative;
+    overflow: hidden;
+
+    // Subtle pulse effect for primary buttons
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+      pointer-events: none;
+    }
 
     &:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: 0 8px 16px rgba($primary-color, 0.3);
+
+      &::before {
+        width: 300px;
+        height: 300px;
+      }
     }
 
     &:active {
