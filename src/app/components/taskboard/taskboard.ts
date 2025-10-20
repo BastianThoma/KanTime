@@ -250,7 +250,10 @@ export class Taskboard implements OnInit {
    * Öffnet Task-Details Modal
    */
   openTaskDetails(task: Task) {
-    this.selectedTask = { ...task };
+    this.selectedTask = { 
+      ...task, 
+      tags: task.tags || [] // Ensure tags is always an array
+    };
     this.showTaskModal = true;
   }
 

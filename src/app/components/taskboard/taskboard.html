@@ -439,7 +439,7 @@
           <label class="form__label">Tags (komma-getrennt)</label>
           <input 
             type="text"
-            [value]="selectedTask.tags.join(', ') || ''"
+            [value]="(selectedTask.tags && selectedTask.tags.length > 0) ? selectedTask.tags.join(', ') : ''"
             (input)="updateTaskTags($event)"
             class="form__input">
         </div>
