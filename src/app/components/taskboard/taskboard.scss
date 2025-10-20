@@ -498,6 +498,14 @@ $desktop: 928px;
     border-color: $primary-color;
   }
 
+  // Provide the same lift affordance for keyboard users
+  // Use :focus-visible so it only shows for keyboard navigation (WCAG)
+  &:focus-visible {
+    transform: translateY(-2px) translateZ(0);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.22);
+    border-color: $primary-color;
+  }
+
   &:last-child {
     margin-bottom: 0;
   }
