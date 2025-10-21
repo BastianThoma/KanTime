@@ -124,6 +124,13 @@ $desktop: 928px;
         font-weight: 700;
         color: $primary-color;
         margin-bottom: 0.25rem;
+        transition: all 0.3s ease;
+        
+        // Subtle pulse animation on parent hover
+        .stats__item:hover & {
+          transform: scale(1.1);
+          text-shadow: 0 0 8px rgba($primary-color, 0.4);
+        }
       }
 
       .stats__label {
