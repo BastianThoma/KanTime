@@ -435,6 +435,15 @@ $desktop: 928px;
     min-height: 400px;
     display: flex;
     flex-direction: column;
+    transition: all 0.3s ease;
+
+    // Enhanced drag-over feedback
+    &.cdk-drop-list-receiving {
+      border-color: $primary-color;
+      box-shadow: 0 0 20px rgba($primary-color, 0.3);
+      background: linear-gradient(135deg, $surface-dark, color.scale($surface-dark, $lightness: 5%));
+      transform: scale(1.02);
+    }
 
     .column__header {
       padding: 1.5rem;
